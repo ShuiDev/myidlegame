@@ -1,0 +1,61 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/BattleScreen.gd" id="1_gxk4t"]
+
+[node name="BattleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gxk4t")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 0
+
+[node name="DungeonLabel" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Dungeon"
+
+[node name="DungeonOption" type="OptionButton" parent="Layout"]
+layout_mode = 2
+
+[node name="PartyLabel" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Party"
+
+[node name="PartyOptions" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="CreatureOption1" type="OptionButton" parent="Layout/PartyOptions"]
+layout_mode = 2
+
+[node name="CreatureOption2" type="OptionButton" parent="Layout/PartyOptions"]
+layout_mode = 2
+
+[node name="CreatureOption3" type="OptionButton" parent="Layout/PartyOptions"]
+layout_mode = 2
+
+[node name="ActionButtons" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="Layout/ActionButtons"]
+layout_mode = 2
+text = "Start"
+
+[node name="StopButton" type="Button" parent="Layout/ActionButtons"]
+layout_mode = 2
+text = "Stop"
+
+[node name="EnemyStatusLabel" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Enemy HP: -"
+
+[node name="PartyStatusLabel" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Party HP: -"
+
+[node name="RecordStatusLabel" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Wins/Losses: -"
