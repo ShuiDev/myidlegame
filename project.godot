@@ -26,6 +26,7 @@ Save="*res://Save_Manager.gd"
 Router="*res://Scene_Router.gd"
 Reg="*res://Registry.gd"
 Ranch="*res://RanchManager.gd"
+Battle="*res://BattleManager.gd"
 Dialogic="*res://addons/dialogic/Core/DialogicGameHandler.gd"
 
 [dialogic]

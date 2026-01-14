@@ -53,3 +53,23 @@ func _ensure_defaults() -> void:
 		data["ranch"] = {}
 	if not data["ranch"].has("creatures") or typeof(data["ranch"]["creatures"]) != TYPE_ARRAY:
 		data["ranch"]["creatures"] = []
+
+	if not data.has("battle") or typeof(data["battle"]) != TYPE_DICTIONARY:
+		data["battle"] = {}
+	var battle: Dictionary = data["battle"]
+	if not battle.has("active"):
+		battle["active"] = false
+	if not battle.has("auto_repeat"):
+		battle["auto_repeat"] = true
+	if not battle.has("dungeon_id"):
+		battle["dungeon_id"] = ""
+	if not battle.has("party") or typeof(battle["party"]) != TYPE_DICTIONARY:
+		battle["party"] = {}
+	if not battle.has("enemy") or typeof(battle["enemy"]) != TYPE_DICTIONARY:
+		battle["enemy"] = {}
+	if not battle.has("wins"):
+		battle["wins"] = 0
+	if not battle.has("losses"):
+		battle["losses"] = 0
+	if not battle.has("last_tick_unix"):
+		battle["last_tick_unix"] = Time.get_unix_time_from_system()
