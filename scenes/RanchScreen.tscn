@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdgppgbx7qwry"]
+
+[ext_resource type="Script" uid="uid://dejnw08g5t2t4" path="res://scenes/RanchScreen.gd" id="1_htjcf"]
+
+[node name="RanchScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_htjcf")
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_top = 40.0
+offset_right = 45.0
+offset_bottom = 71.0
+text = "Back"
+
+[node name="AddCreatureButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 39.0
+offset_bottom = 31.0
+text = "Add"
+
+[node name="CreatureList" type="ItemList" parent="."]
+layout_mode = 0
+offset_top = 80.0
+offset_right = 8.0
+offset_bottom = 88.0
+auto_width = true
+auto_height = true
+item_count = 1

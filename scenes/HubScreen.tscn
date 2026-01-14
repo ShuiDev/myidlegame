@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://d4fpgqfp4f54g"]
+
+[ext_resource type="Script" uid="uid://cwvjqj3bq3ggj" path="res://HubScreen.gd" id="1_siimg"]
+[ext_resource type="PackedScene" uid="uid://vuirolhi5ojj" path="res://scenes/TutorialOverlay.tscn" id="1_uqau5"]
+
+[node name="HubScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_siimg")
+
+[node name="UI" type="VBoxContainer" parent="."]
+layout_mode = 0
+
+[node name="RanchButton" type="Button" parent="UI"]
+layout_mode = 2
+text = "Ranch"
+
+[node name="SmithButton" type="Button" parent="UI"]
+layout_mode = 2
+text = "Smith"
+
+[node name="BuildButton" type="Button" parent="UI"]
+layout_mode = 2
+text = "Build"
+
+[node name="TutorialOverlay" parent="." instance=ExtResource("1_uqau5")]
+layout_mode = 1

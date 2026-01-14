@@ -1,0 +1,243 @@
+{
+	"created_unix": 1768083741.769,
+	"flags": {
+		"tutorial_complete": true
+	},
+	"player": {
+		"hub_spawn_id": "default"
+	},
+	"ranch": {
+		"creatures": [
+			{
+				"age_days": 0,
+				"growth": {
+					"defence": 1.0,
+					"dexterity": 1.0,
+					"height": 1.0,
+					"magic": 1.0,
+					"magic_defence": 1.0,
+					"skill_cooking": 1.0,
+					"skill_fishing": 1.0,
+					"skill_mining": 1.0,
+					"skill_smithing": 1.0,
+					"skill_woodcutting": 1.0,
+					"strength": 1.0,
+					"vitality": 1.0,
+					"weight": 1.0
+				},
+				"happiness": 0.0,
+				"hunger": 0.0,
+				"id": "c_1768083787_835013205",
+				"name": "Critter",
+				"species": "default",
+				"stats": {
+					"defence": 0,
+					"dexterity": 0,
+					"height": 0,
+					"magic": 0,
+					"magic_defence": 0,
+					"skill_cooking": 0,
+					"skill_fishing": 0,
+					"skill_mining": 0,
+					"skill_smithing": 0,
+					"skill_woodcutting": 0,
+					"strength": 0,
+					"vitality": 0,
+					"weight": 0
+				}
+			},
+			{
+				"age_days": 0,
+				"growth": {
+					"defence": 1.0,
+					"dexterity": 1.0,
+					"height": 1.0,
+					"magic": 1.0,
+					"magic_defence": 1.0,
+					"skill_cooking": 1.0,
+					"skill_fishing": 1.0,
+					"skill_mining": 1.0,
+					"skill_smithing": 1.0,
+					"skill_woodcutting": 1.0,
+					"strength": 1.0,
+					"vitality": 1.0,
+					"weight": 1.0
+				},
+				"happiness": 0.0,
+				"hunger": 0.0,
+				"id": "c_1768083788_1794788983",
+				"name": "Critter",
+				"species": "default",
+				"stats": {
+					"defence": 0,
+					"dexterity": 0,
+					"height": 0,
+					"magic": 0,
+					"magic_defence": 0,
+					"skill_cooking": 0,
+					"skill_fishing": 0,
+					"skill_mining": 0,
+					"skill_smithing": 0,
+					"skill_woodcutting": 0,
+					"strength": 0,
+					"vitality": 0,
+					"weight": 0
+				}
+			},
+			{
+				"age_days": 0,
+				"growth": {
+					"defence": 1.0,
+					"dexterity": 1.0,
+					"height": 1.0,
+					"magic": 1.0,
+					"magic_defence": 1.0,
+					"skill_cooking": 1.0,
+					"skill_fishing": 1.0,
+					"skill_mining": 1.0,
+					"skill_smithing": 1.0,
+					"skill_woodcutting": 1.0,
+					"strength": 1.0,
+					"vitality": 1.0,
+					"weight": 1.0
+				},
+				"happiness": 0.0,
+				"hunger": 0.0,
+				"id": "c_1768083788_4179386671",
+				"name": "Critter",
+				"species": "default",
+				"stats": {
+					"defence": 0,
+					"dexterity": 0,
+					"height": 0,
+					"magic": 0,
+					"magic_defence": 0,
+					"skill_cooking": 0,
+					"skill_fishing": 0,
+					"skill_mining": 0,
+					"skill_smithing": 0,
+					"skill_woodcutting": 0,
+					"strength": 0,
+					"vitality": 0,
+					"weight": 0
+				}
+			},
+			{
+				"age_days": 0,
+				"growth": {
+					"defence": 1.0,
+					"dexterity": 1.0,
+					"height": 1.0,
+					"magic": 1.0,
+					"magic_defence": 1.0,
+					"skill_cooking": 1.0,
+					"skill_fishing": 1.0,
+					"skill_mining": 1.0,
+					"skill_smithing": 1.0,
+					"skill_woodcutting": 1.0,
+					"strength": 1.0,
+					"vitality": 1.0,
+					"weight": 1.0
+				},
+				"happiness": 0.0,
+				"hunger": 0.0,
+				"id": "c_1768083788_511017053",
+				"name": "Critter",
+				"species": "default",
+				"stats": {
+					"defence": 0,
+					"dexterity": 0,
+					"height": 0,
+					"magic": 0,
+					"magic_defence": 0,
+					"skill_cooking": 0,
+					"skill_fishing": 0,
+					"skill_mining": 0,
+					"skill_smithing": 0,
+					"skill_woodcutting": 0,
+					"strength": 0,
+					"vitality": 0,
+					"weight": 0
+				}
+			},
+			{
+				"age_days": 0,
+				"growth": {
+					"defence": 1.0,
+					"dexterity": 1.0,
+					"height": 1.0,
+					"magic": 1.0,
+					"magic_defence": 1.0,
+					"skill_cooking": 1.0,
+					"skill_fishing": 1.0,
+					"skill_mining": 1.0,
+					"skill_smithing": 1.0,
+					"skill_woodcutting": 1.0,
+					"strength": 1.0,
+					"vitality": 1.0,
+					"weight": 1.0
+				},
+				"happiness": 0.0,
+				"hunger": 0.0,
+				"id": "c_1768083788_3626989817",
+				"name": "Critter",
+				"species": "default",
+				"stats": {
+					"defence": 0,
+					"dexterity": 0,
+					"height": 0,
+					"magic": 0,
+					"magic_defence": 0,
+					"skill_cooking": 0,
+					"skill_fishing": 0,
+					"skill_mining": 0,
+					"skill_smithing": 0,
+					"skill_woodcutting": 0,
+					"strength": 0,
+					"vitality": 0,
+					"weight": 0
+				}
+			},
+			{
+				"age_days": 0,
+				"growth": {
+					"defence": 1.0,
+					"dexterity": 1.0,
+					"height": 1.0,
+					"magic": 1.0,
+					"magic_defence": 1.0,
+					"skill_cooking": 1.0,
+					"skill_fishing": 1.0,
+					"skill_mining": 1.0,
+					"skill_smithing": 1.0,
+					"skill_woodcutting": 1.0,
+					"strength": 1.0,
+					"vitality": 1.0,
+					"weight": 1.0
+				},
+				"happiness": 0.0,
+				"hunger": 0.0,
+				"id": "c_1768083788_96903471",
+				"name": "Critter",
+				"species": "default",
+				"stats": {
+					"defence": 0,
+					"dexterity": 0,
+					"height": 0,
+					"magic": 0,
+					"magic_defence": 0,
+					"skill_cooking": 0,
+					"skill_fishing": 0,
+					"skill_mining": 0,
+					"skill_smithing": 0,
+					"skill_woodcutting": 0,
+					"strength": 0,
+					"vitality": 0,
+					"weight": 0
+				}
+			}
+		]
+	},
+	"updated_unix": 1768083788.81,
+	"version": 1
+}

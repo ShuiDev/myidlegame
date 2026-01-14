@@ -1,0 +1,89 @@
+[gd_scene load_steps=6 format=3 uid="uid://bunj7lkpljud8"]
+
+[ext_resource type="Script" uid="uid://dhjbrpw1cqfao" path="res://dailogue_box.gd" id="1_xetfl"]
+[ext_resource type="Texture2D" uid="uid://ivcftegarm4r" path="res://sprites/shui.png" id="3_nwuxu"]
+[ext_resource type="Texture2D" uid="uid://dgxx4fdrjfa2g" path="res://sprites/20250420manaSoul9SlicesA-Sheet.png" id="3_pe8jb"]
+[ext_resource type="AudioStream" uid="uid://dhjmfj2yc65cv" path="res://voices/owl/hoot_2.mp3" id="3_s2eul"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nwuxu"]
+texture = ExtResource("3_pe8jb")
+texture_margin_left = 30.0
+texture_margin_top = 20.0
+texture_margin_right = 30.0
+texture_margin_bottom = 15.0
+
+[node name="DialogueBox" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -395.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xetfl")
+blip_every = 6
+pitch_min = 0.05
+pitch_max = 0.1
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+size_flags_stretch_ratio = 0.19
+texture = ExtResource("3_pe8jb")
+region_rect = Rect2(0, 0, 96, 96)
+patch_margin_left = 27
+patch_margin_top = 18
+patch_margin_right = 27
+patch_margin_bottom = 20
+
+[node name="TextureRect" type="TextureRect" parent="NinePatchRect"]
+layout_mode = 0
+offset_left = -66.0
+offset_top = 4.0
+offset_right = 187.0
+offset_bottom = 257.0
+texture = ExtResource("3_nwuxu")
+expand_mode = 3
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_nwuxu")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 18.0
+offset_right = 664.0
+offset_bottom = 271.0
+scale = Vector2(0.76, 1)
+size_flags_horizontal = 3
+text = "This is a test of the talking sounds in the game."
+fit_content = true
+
+[node name="Blip" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_s2eul")
+
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_nwuxu")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel2"]
+layout_mode = 0
+offset_left = 9.000015
+offset_top = 57.0
+offset_right = 157.00002
+offset_bottom = 97.0
+scale = Vector2(3.445479, 3.445479)
+
+[node name="Next" type="Button" parent="Panel2/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Next"
+
+[node name="Skip" type="Button" parent="Panel2/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Skip"

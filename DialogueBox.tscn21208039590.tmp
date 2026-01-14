@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://bunj7lkpljud8"]
+
+[ext_resource type="Script" uid="uid://dhjbrpw1cqfao" path="res://dailogue_box.gd" id="1_xetfl"]
+[ext_resource type="Texture2D" uid="uid://bahn2wtc4ij11" path="res://sprites/wolf_smith.png" id="2_s4bul"]
+[ext_resource type="AudioStream" uid="uid://dhjmfj2yc65cv" path="res://voices/owl/hoot_2.mp3" id="3_s2eul"]
+
+[node name="DialogueBox" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -395.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xetfl")
+blip_every = 2
+pitch_min = 0.05
+pitch_max = 0.1
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_s4bul")
+expand_mode = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "This is a test of the talking sounds in the game."
+fit_content = true
+
+[node name="ContinueHint" type="Label" parent="."]
+layout_mode = 2
+text = "test"
+
+[node name="Blip" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_s2eul")
+
+[node name="Next" type="Button" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Next"
+
+[node name="Skip" type="Button" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Skip"
