@@ -2,14 +2,16 @@
 # Attach to your Hub root node (Control or Node2D, whatever your hub is)
 extends Control
 
-@onready var tutorial: TutorialOverlay = $TutorialOverlay
-@onready var ranch_button: Button = $UI/RanchButton
-@onready var smith_button: Button = $UI/SmithButton
-@onready var build_button: Button = $UI/BuildButton
-@onready var battle_button: Button = $UI/BattleButton
-@onready var player_button: Button = $UI/PlayerButton
+@onready var tutorial: TutorialOverlay = get_node_or_null("TutorialOverlay") as TutorialOverlay
+@onready var ranch_button: Button = get_node_or_null("UI/RanchButton") as Button
+@onready var smith_button: Button = get_node_or_null("UI/SmithButton") as Button
+@onready var build_button: Button = get_node_or_null("UI/BuildButton") as Button
+@onready var battle_button: Button = get_node_or_null("UI/BattleButton") as Button
+@onready var player_button: Button = get_node_or_null("UI/PlayerButton") as Button
 
 func _ready() -> void:
+	if not _ensure_nodes():
+		return
 	ranch_button.pressed.connect(_go_ranch)
 	smith_button.pressed.connect(_go_smith)
 	build_button.pressed.connect(_go_build)
@@ -24,6 +26,25 @@ func _ready() -> void:
 
 	if not gs.tutorial_complete():
 		_start_tutorial()
+
+func _ensure_nodes() -> bool:
+	var missing: Array[String] = []
+	if tutorial == null:
+		missing.append("TutorialOverlay")
+	if ranch_button == null:
+		missing.append("UI/RanchButton")
+	if smith_button == null:
+		missing.append("UI/SmithButton")
+	if build_button == null:
+		missing.append("UI/BuildButton")
+	if battle_button == null:
+		missing.append("UI/BattleButton")
+	if player_button == null:
+		missing.append("UI/PlayerButton")
+	if missing.is_empty():
+		return true
+	push_warning("HubScreen missing nodes: %s" % ", ".join(missing))
+	return false
 
 func _start_tutorial() -> void:
 	# You said you'll handle specifics; here are placeholder steps.

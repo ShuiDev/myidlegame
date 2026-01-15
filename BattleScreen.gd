@@ -1,20 +1,22 @@
 extends Control
 
-@onready var back_button: Button = $UI/BackButton
-@onready var dungeon_option: OptionButton = $UI/DungeonRow/DungeonOption
-@onready var party_one_option: OptionButton = $UI/PartyRow/PartyOneOption
-@onready var party_two_option: OptionButton = $UI/PartyRow/PartyTwoOption
-@onready var party_three_option: OptionButton = $UI/PartyRow/PartyThreeOption
-@onready var speed_slider: HSlider = $UI/SpeedRow/SpeedSlider
-@onready var speed_label: Label = $UI/SpeedRow/SpeedValue
-@onready var start_button: Button = $UI/ControlsRow/StartButton
-@onready var stop_button: Button = $UI/ControlsRow/StopButton
-@onready var enemy_texture: TextureRect = $UI/StatusRow/EnemyTexture
-@onready var enemy_label: Label = $UI/StatusRow/EnemyStatus
-@onready var party_label: Label = $UI/StatusRow/PartyStatus
-@onready var record_label: Label = $UI/StatusRow/RecordStatus
+@onready var back_button: Button = get_node_or_null("UI/BackButton") as Button
+@onready var dungeon_option: OptionButton = get_node_or_null("UI/DungeonRow/DungeonOption") as OptionButton
+@onready var party_one_option: OptionButton = get_node_or_null("UI/PartyRow/PartyOneOption") as OptionButton
+@onready var party_two_option: OptionButton = get_node_or_null("UI/PartyRow/PartyTwoOption") as OptionButton
+@onready var party_three_option: OptionButton = get_node_or_null("UI/PartyRow/PartyThreeOption") as OptionButton
+@onready var speed_slider: HSlider = get_node_or_null("UI/SpeedRow/SpeedSlider") as HSlider
+@onready var speed_label: Label = get_node_or_null("UI/SpeedRow/SpeedValue") as Label
+@onready var start_button: Button = get_node_or_null("UI/ControlsRow/StartButton") as Button
+@onready var stop_button: Button = get_node_or_null("UI/ControlsRow/StopButton") as Button
+@onready var enemy_texture: TextureRect = get_node_or_null("UI/StatusRow/EnemyTexture") as TextureRect
+@onready var enemy_label: Label = get_node_or_null("UI/StatusRow/EnemyStatus") as Label
+@onready var party_label: Label = get_node_or_null("UI/StatusRow/PartyStatus") as Label
+@onready var record_label: Label = get_node_or_null("UI/StatusRow/RecordStatus") as Label
 
 func _ready() -> void:
+	if not _ensure_nodes():
+		return
 	back_button.pressed.connect(_go_back)
 	start_button.pressed.connect(_start_battle)
 	stop_button.pressed.connect(_stop_battle)
@@ -24,6 +26,39 @@ func _ready() -> void:
 	_populate_party_options()
 	_sync_speed()
 	_refresh_status()
+
+func _ensure_nodes() -> bool:
+	var missing: Array[String] = []
+	if back_button == null:
+		missing.append("UI/BackButton")
+	if dungeon_option == null:
+		missing.append("UI/DungeonRow/DungeonOption")
+	if party_one_option == null:
+		missing.append("UI/PartyRow/PartyOneOption")
+	if party_two_option == null:
+		missing.append("UI/PartyRow/PartyTwoOption")
+	if party_three_option == null:
+		missing.append("UI/PartyRow/PartyThreeOption")
+	if speed_slider == null:
+		missing.append("UI/SpeedRow/SpeedSlider")
+	if speed_label == null:
+		missing.append("UI/SpeedRow/SpeedValue")
+	if start_button == null:
+		missing.append("UI/ControlsRow/StartButton")
+	if stop_button == null:
+		missing.append("UI/ControlsRow/StopButton")
+	if enemy_texture == null:
+		missing.append("UI/StatusRow/EnemyTexture")
+	if enemy_label == null:
+		missing.append("UI/StatusRow/EnemyStatus")
+	if party_label == null:
+		missing.append("UI/StatusRow/PartyStatus")
+	if record_label == null:
+		missing.append("UI/StatusRow/RecordStatus")
+	if missing.is_empty():
+		return true
+	push_warning("BattleScreen missing nodes: %s" % ", ".join(missing))
+	return false
 
 func _go_back() -> void:
 	Router.goto_hub()
