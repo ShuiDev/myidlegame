@@ -87,7 +87,10 @@ func start_battle(dungeon_id: String, party_ids: Array[String], auto_repeat: boo
 	if not DUNGEONS.has(dungeon_id):
 		push_warning("[Battle] Unknown dungeon: %s" % dungeon_id)
 		return false
-	var party := _build_party_state(party_ids)
+	if party_ids.size() > 3:
+		push_warning("[Battle] Party size exceeds 3. Extra members will be ignored.")
+	var capped_party_ids := party_ids.slice(0, 3)
+	var party := _build_party_state(capped_party_ids)
 	if party.is_empty():
 		push_warning("[Battle] No valid party members.")
 		return false
