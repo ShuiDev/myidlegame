@@ -75,3 +75,18 @@ func _ensure_defaults() -> void:
 		battle["losses"] = 0
 	if not battle.has("last_tick_unix"):
 		battle["last_tick_unix"] = Time.get_unix_time_from_system()
+
+	if not data.has("inventory") or typeof(data["inventory"]) != TYPE_ARRAY:
+		data["inventory"] = []
+	if not data.has("equipment") or typeof(data["equipment"]) != TYPE_DICTIONARY:
+		data["equipment"] = {}
+	if not data["equipment"].has("weapon"):
+		data["equipment"]["weapon"] = ""
+	if not data["equipment"].has("armor"):
+		data["equipment"]["armor"] = ""
+	if not data["equipment"].has("accessory"):
+		data["equipment"]["accessory"] = ""
+	if not data.has("skills") or typeof(data["skills"]) != TYPE_DICTIONARY:
+		data["skills"] = {}
+	if not data["skills"].has("combat"):
+		data["skills"]["combat"] = {"level": 1, "xp": 0}

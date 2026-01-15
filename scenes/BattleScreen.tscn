@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://cby5yy6tyr6wh"]
 
-[ext_resource type="Script" path="res://scenes/BattleScreen.gd" id="1_gxk4t"]
+[ext_resource type="Script" path="res://BattleScreen.gd" id="1_3frkw"]
 
 [node name="BattleScreen" type="Control"]
 layout_mode = 3
@@ -9,53 +9,104 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_gxk4t")
+script = ExtResource("1_3frkw")
 
-[node name="Layout" type="VBoxContainer" parent="."]
-layout_mode = 0
+[node name="UI" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+size_flags_vertical = 3
 
-[node name="DungeonLabel" type="Label" parent="Layout"]
+[node name="BackButton" type="Button" parent="UI"]
+layout_mode = 2
+text = "Back"
+
+[node name="DungeonRow" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+
+[node name="DungeonLabel" type="Label" parent="UI/DungeonRow"]
 layout_mode = 2
 text = "Dungeon"
 
-[node name="DungeonOption" type="OptionButton" parent="Layout"]
+[node name="DungeonOption" type="OptionButton" parent="UI/DungeonRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PartyRow" type="HBoxContainer" parent="UI"]
 layout_mode = 2
 
-[node name="PartyLabel" type="Label" parent="Layout"]
+[node name="PartyLabel" type="Label" parent="UI/PartyRow"]
 layout_mode = 2
 text = "Party"
 
-[node name="PartyOptions" type="HBoxContainer" parent="Layout"]
+[node name="PartyOneOption" type="OptionButton" parent="UI/PartyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PartyTwoOption" type="OptionButton" parent="UI/PartyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PartyThreeOption" type="OptionButton" parent="UI/PartyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SpeedRow" type="HBoxContainer" parent="UI"]
 layout_mode = 2
 
-[node name="CreatureOption1" type="OptionButton" parent="Layout/PartyOptions"]
+[node name="SpeedLabel" type="Label" parent="UI/SpeedRow"]
+layout_mode = 2
+text = "Speed"
+
+[node name="SpeedSlider" type="HSlider" parent="UI/SpeedRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.2
+max_value = 3.0
+step = 0.1
+value = 0.6
+
+[node name="SpeedValue" type="Label" parent="UI/SpeedRow"]
+layout_mode = 2
+text = "x0.6"
+
+[node name="ControlsRow" type="HBoxContainer" parent="UI"]
 layout_mode = 2
 
-[node name="CreatureOption2" type="OptionButton" parent="Layout/PartyOptions"]
-layout_mode = 2
-
-[node name="CreatureOption3" type="OptionButton" parent="Layout/PartyOptions"]
-layout_mode = 2
-
-[node name="ActionButtons" type="HBoxContainer" parent="Layout"]
-layout_mode = 2
-
-[node name="StartButton" type="Button" parent="Layout/ActionButtons"]
+[node name="StartButton" type="Button" parent="UI/ControlsRow"]
 layout_mode = 2
 text = "Start"
 
-[node name="StopButton" type="Button" parent="Layout/ActionButtons"]
+[node name="StopButton" type="Button" parent="UI/ControlsRow"]
 layout_mode = 2
 text = "Stop"
 
-[node name="EnemyStatusLabel" type="Label" parent="Layout"]
+[node name="StatusRow" type="HBoxContainer" parent="UI"]
 layout_mode = 2
-text = "Enemy HP: -"
+size_flags_vertical = 3
 
-[node name="PartyStatusLabel" type="Label" parent="Layout"]
+[node name="EnemyTexture" type="TextureRect" parent="UI/StatusRow"]
 layout_mode = 2
-text = "Party HP: -"
+custom_minimum_size = Vector2(96, 96)
+expand_mode = 5
+stretch_mode = 5
 
-[node name="RecordStatusLabel" type="Label" parent="Layout"]
+[node name="EnemyStatus" type="Label" parent="UI/StatusRow"]
 layout_mode = 2
-text = "Wins/Losses: -"
+size_flags_horizontal = 3
+text = "Enemy: --"
+
+[node name="PartyStatus" type="Label" parent="UI/StatusRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Party HP: --"
+
+[node name="RecordStatus" type="Label" parent="UI/StatusRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Record: 0W / 0L"

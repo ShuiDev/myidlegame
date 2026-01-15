@@ -63,6 +63,15 @@ static func new_save_data() -> Dictionary:
 			"wins": 0,
 			"losses": 0,
 			"last_tick_unix": Time.get_unix_time_from_system()
+		},
+		"inventory": [],
+		"equipment": {
+			"weapon": "",
+			"armor": "",
+			"accessory": ""
+		},
+		"skills": {
+			"combat": {"level": 1, "xp": 0}
 		}
 	}
 

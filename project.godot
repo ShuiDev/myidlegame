@@ -27,6 +27,9 @@ Router="*res://Scene_Router.gd"
 Reg="*res://Registry.gd"
 Ranch="*res://RanchManager.gd"
 Battle="*res://BattleManager.gd"
+Inventory="*res://InventoryManager.gd"
+Equipment="*res://EquipmentManager.gd"
+Skills="*res://SkillManager.gd"
 Dialogic="*res://addons/dialogic/Core/DialogicGameHandler.gd"
 
 [dialogic]
