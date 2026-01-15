@@ -85,4 +85,5 @@ func assign_gather(creature_id: String, skill_id: String) -> void:
 
 func assign_dungeon(creature_id: String, dungeon_id: String) -> void:
 	# Later: autobattle party assignment.
-	pass
+	var party: Array[String] = [creature_id]
+	Battle.start_battle(dungeon_id, party, true)

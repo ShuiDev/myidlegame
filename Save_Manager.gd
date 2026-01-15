@@ -52,6 +52,17 @@ static func new_save_data() -> Dictionary:
 		},
 		"player": {
 			"hub_spawn_id": "default"
+		},
+		"battle": {
+			"active": false,
+			"auto_repeat": true,
+			"speed_multiplier": 0.6,
+			"dungeon_id": "",
+			"party": {},
+			"enemy": {},
+			"wins": 0,
+			"losses": 0,
+			"last_tick_unix": Time.get_unix_time_from_system()
 		}
 	}
 
