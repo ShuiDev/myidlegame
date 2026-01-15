@@ -6,15 +6,19 @@ extends Control
 @onready var ranch_button: Button = $UI/RanchButton
 @onready var smith_button: Button = $UI/SmithButton
 @onready var build_button: Button = $UI/BuildButton
+@onready var battle_button: Button = $UI/BattleButton
+@onready var player_button: Button = $UI/PlayerButton
 
 func _ready() -> void:
 	ranch_button.pressed.connect(_go_ranch)
 	smith_button.pressed.connect(_go_smith)
 	build_button.pressed.connect(_go_build)
+	battle_button.pressed.connect(_go_battle)
+	player_button.pressed.connect(_go_player)
 	tutorial.visible = false
 	tutorial.tutorial_finished.connect(_on_tutorial_finished)
 
-	var gs := _require_game_state()
+	var gs=_require_game_state()
 	if gs == null:
 		return
 
@@ -36,13 +40,13 @@ func _start_tutorial() -> void:
 	tutorial.start_tutorial(chapters)
 
 func _on_tutorial_finished() -> void:
-	var gs := _require_game_state()
+	var gs=_require_game_state()
 	if gs == null:
 		return
 	gs.mark_tutorial_complete()
 
 func _require_game_state() -> State:
-	var gs := get_tree().root.get_node_or_null("State")
+	var gs=get_tree().root.get_node_or_null("State")
 	if gs == null:
 		push_warning("Missing autoload: GameState")
 		return null
@@ -57,3 +61,9 @@ func _go_smith() -> void:
 
 func _go_build() -> void:
 	Router.goto_build()
+
+func _go_battle() -> void:
+	Router.goto_battle()
+
+func _go_player() -> void:
+	Router.goto_player()

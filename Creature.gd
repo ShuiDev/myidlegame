@@ -39,19 +39,19 @@ func to_dict() -> Dictionary:
 	}
 
 static func from_dict(d: Dictionary) -> Creature:
-	var c := Creature.new(d.get("id", ""), d.get("name", "Creature"))
+	var c=Creature.new(d.get("id", ""), d.get("name", "Creature"))
 	c.species = d.get("species", "default")
 	c.age_days = int(d.get("age_days", 0))
 
 	# Merge to support new stats added later without breaking old saves
-	var base_stats := Reg.default_stats()
+	var base_stats=Reg.default_stats()
 	var loaded_stats = d.get("stats", {})
 	if typeof(loaded_stats) == TYPE_DICTIONARY:
 		for k in loaded_stats.keys():
 			base_stats[k] = loaded_stats[k]
 	c.stats = base_stats
 
-	var base_growth := Reg.default_growth_rates()
+	var base_growth=Reg.default_growth_rates()
 	var loaded_growth = d.get("growth", {})
 	if typeof(loaded_growth) == TYPE_DICTIONARY:
 		for k in loaded_growth.keys():

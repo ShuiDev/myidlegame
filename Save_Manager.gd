@@ -12,7 +12,7 @@ static func ensure_save_dir() -> void:
 static func list_save_files() -> Array[String]:
 	ensure_save_dir()
 	var out: Array[String] = []
-	var dir := DirAccess.open(SAVE_DIR)
+	var dir=DirAccess.open(SAVE_DIR)
 	if dir == null:
 		return out
 
@@ -34,7 +34,7 @@ static func save_path(file_name: String) -> String:
 	return SAVE_DIR.path_join(file_name)
 
 static func normalize_file_name(file_name: String) -> String:
-	var n := file_name.strip_edges()
+	var n=file_name.strip_edges()
 	if n == "":
 		n = "save_1" + FILE_EXT
 	if not n.to_lower().ends_with(FILE_EXT):
@@ -52,22 +52,42 @@ static func new_save_data() -> Dictionary:
 		},
 		"player": {
 			"hub_spawn_id": "default"
+		},
+		"battle": {
+			"active": false,
+			"auto_repeat": true,
+			"speed_multiplier": 0.6,
+			"dungeon_id": "",
+			"party": {},
+			"enemy": {},
+			"wins": 0,
+			"losses": 0,
+			"last_tick_unix": Time.get_unix_time_from_system()
+		},
+		"inventory": [],
+		"equipment": {
+			"weapon": "",
+			"armor": "",
+			"accessory": ""
+		},
+		"skills": {
+			"combat": {"level": 1, "xp": 0}
 		}
 	}
 
 static func load_save(file_name: String) -> Dictionary:
 	ensure_save_dir()
-	var n := normalize_file_name(file_name)
-	var path := save_path(n)
+	var n=normalize_file_name(file_name)
+	var path=save_path(n)
 
 	if not FileAccess.file_exists(path):
 		return {}
 
-	var f := FileAccess.open(path, FileAccess.READ)
+	var f=FileAccess.open(path, FileAccess.READ)
 	if f == null:
 		return {}
 
-	var txt := f.get_as_text()
+	var txt=f.get_as_text()
 	f.close()
 
 	var parsed = JSON.parse_string(txt)
@@ -78,13 +98,13 @@ static func load_save(file_name: String) -> Dictionary:
 
 static func write_save(file_name: String, data: Dictionary) -> bool:
 	ensure_save_dir()
-	var n := normalize_file_name(file_name)
-	var path := save_path(n)
+	var n=normalize_file_name(file_name)
+	var path=save_path(n)
 
 	data["updated_unix"] = Time.get_unix_time_from_system()
 
-	var txt := JSON.stringify(data, "\t")
-	var f := FileAccess.open(path, FileAccess.WRITE)
+	var txt=JSON.stringify(data, "\t")
+	var f=FileAccess.open(path, FileAccess.WRITE)
 	if f == null:
 		return false
 

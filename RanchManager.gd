@@ -40,8 +40,8 @@ func _commit() -> void:
 	State.write_now()
 
 func add_creature(n: String = "Creature") -> void:
-	var id := "c_%d_%d" % [Time.get_unix_time_from_system(), randi()]
-	var c := Creature.new(id, n)
+	var id="c_%d_%d" % [Time.get_unix_time_from_system(), randi()]
+	var c=Creature.new(id, n)
 	creatures.append(c.to_dict())
 	_commit()
 
@@ -72,7 +72,7 @@ func feed(creature_id: String, food_id: String, amount: int = 1) -> void:
 	# For now, we just bump age-related growth example.
 	for i in range(creatures.size()):
 		if creatures[i].get("id", "") == creature_id:
-			var c := Creature.from_dict(creatures[i])
+			var c=Creature.from_dict(creatures[i])
 			# placeholder: small generic boost
 			c.growth["strength"] = float(c.growth.get("strength", 1.0)) + 0.01 * float(amount)
 			creatures[i] = c.to_dict()
@@ -85,4 +85,5 @@ func assign_gather(creature_id: String, skill_id: String) -> void:
 
 func assign_dungeon(creature_id: String, dungeon_id: String) -> void:
 	# Later: autobattle party assignment.
-	pass
+	var party: Array[String] = [creature_id]
+	Battle.start_battle(dungeon_id, party, true)
