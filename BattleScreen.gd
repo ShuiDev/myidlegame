@@ -136,20 +136,48 @@ func _refresh_status() -> void:
 		record_label.text = "Record: 0W / 0L"
 		enemy_texture.texture = null
 		return
-	var enemy := battle.get("enemy", {})
+	var enemies := battle.get("enemies", [])
 	var party := battle.get("party", {})
-	var enemy_hp := float(enemy.get("hp", 0.0))
-	var enemy_max := float(enemy.get("max_hp", 0.0))
+	var enemy_summary := _summarize_enemies(enemies)
+	var enemy_hp := float(enemy_summary.get("hp", 0.0))
+	var enemy_max := float(enemy_summary.get("max_hp", 0.0))
 	var party_hp := float(party.get("hp", 0.0))
 	var party_max := float(party.get("max_hp", 0.0))
-	var enemy_name := str(enemy.get("name", "Enemy"))
+	var enemy_name := str(enemy_summary.get("name", "Enemy"))
+	var enemy_count := int(enemy_summary.get("count", 0))
 	var wins := int(battle.get("wins", 0))
 	var losses := int(battle.get("losses", 0))
-	enemy_label.text = "%s: %.0f / %.0f" % [enemy_name, enemy_hp, enemy_max]
+	if enemy_count > 1:
+		enemy_label.text = "%s (x%d): %.0f / %.0f" % [enemy_name, enemy_count, enemy_hp, enemy_max]
+	else:
+		enemy_label.text = "%s: %.0f / %.0f" % [enemy_name, enemy_hp, enemy_max]
 	party_label.text = "Party HP: %.0f / %.0f" % [party_hp, party_max]
 	record_label.text = "Record: %dW / %dL" % [wins, losses]
-	var texture_path := str(enemy.get("texture_path", ""))
+	var texture_path := str(enemy_summary.get("texture_path", ""))
 	if texture_path != "" and ResourceLoader.exists(texture_path):
 		enemy_texture.texture = load(texture_path)
 	else:
 		enemy_texture.texture = null
+
+func _summarize_enemies(enemies: Array) -> Dictionary:
+	var total_hp: float = 0.0
+	var total_max: float = 0.0
+	var count := 0
+	var name := "Enemy"
+	var texture_path := ""
+	for enemy in enemies:
+		if typeof(enemy) != TYPE_DICTIONARY:
+			continue
+		if count == 0:
+			name = str(enemy.get("name", "Enemy"))
+			texture_path = str(enemy.get("texture_path", ""))
+		count += 1
+		total_hp += float(enemy.get("hp", 0.0))
+		total_max += float(enemy.get("max_hp", 0.0))
+	return {
+		"name": name,
+		"texture_path": texture_path,
+		"hp": total_hp,
+		"max_hp": total_max,
+		"count": count
+	}

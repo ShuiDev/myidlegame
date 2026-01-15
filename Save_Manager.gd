@@ -60,7 +60,7 @@ static func new_save_data() -> Dictionary:
 			"speed_multiplier": 0.6,
 			"dungeon_id": "",
 			"party": {},
-			"enemy": {},
+			"enemies": [],
 			"wins": 0,
 			"losses": 0,
 			"last_tick_unix": Time.get_unix_time_from_system()

@@ -70,8 +70,12 @@ func _ensure_defaults() -> void:
 		battle["dungeon_id"] = ""
 	if not battle.has("party") or typeof(battle["party"]) != TYPE_DICTIONARY:
 		battle["party"] = {}
-	if not battle.has("enemy") or typeof(battle["enemy"]) != TYPE_DICTIONARY:
-		battle["enemy"] = {}
+	if not battle.has("enemies") or typeof(battle["enemies"]) != TYPE_ARRAY:
+		battle["enemies"] = []
+	if battle.has("enemy") and typeof(battle["enemy"]) == TYPE_DICTIONARY:
+		if battle["enemies"].is_empty() and not battle["enemy"].is_empty():
+			battle["enemies"] = [battle["enemy"].duplicate(true)]
+		battle.erase("enemy")
 	if not battle.has("wins"):
 		battle["wins"] = 0
 	if not battle.has("losses"):
