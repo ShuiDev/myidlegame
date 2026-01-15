@@ -59,6 +59,12 @@ func get_creature_objects() -> Array[Creature]:
 			out.append(Creature.from_dict(d))
 	return out
 
+func get_creature(creature_id: String) -> Creature:
+	for d in creatures:
+		if typeof(d) == TYPE_DICTIONARY and d.get("id", "") == creature_id:
+			return Creature.from_dict(d)
+	return null
+
 func update_creature(creature: Creature) -> void:
 	for i in range(creatures.size()):
 		if creatures[i].get("id", "") == creature.id:
