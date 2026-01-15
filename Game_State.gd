@@ -61,6 +61,8 @@ func _ensure_defaults() -> void:
 		battle["active"] = false
 	if not battle.has("auto_repeat"):
 		battle["auto_repeat"] = true
+	if not battle.has("speed_multiplier"):
+		battle["speed_multiplier"] = 0.6
 	if not battle.has("dungeon_id"):
 		battle["dungeon_id"] = ""
 	if not battle.has("party") or typeof(battle["party"]) != TYPE_DICTIONARY:

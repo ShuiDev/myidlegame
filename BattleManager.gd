@@ -18,6 +18,9 @@ const MAGIC_DEFENCE_WEIGHT: float = 0.5
 const DEFENCE_REDUCTION: float = 0.3
 const VICTORY_HEAL_PERCENT: float = 0.2
 const COMMIT_INTERVAL_SEC: int = 10
+const DEFAULT_SPEED_MULTIPLIER: float = 0.6
+const MIN_SPEED_MULTIPLIER: float = 0.2
+const MAX_SPEED_MULTIPLIER: float = 3.0
 
 const DUNGEONS: Dictionary = {
 	"slime_pit": {
@@ -67,7 +70,7 @@ func _process(_delta: float) -> void:
 	var elapsed := now - last_tick
 	if elapsed <= 0:
 		return
-	_simulate_time(float(elapsed))
+	_simulate_time(float(elapsed) * _current_speed_multiplier())
 	battle["last_tick_unix"] = now
 	_commit_if_needed(now)
 
@@ -79,7 +82,7 @@ func _on_save_loaded() -> void:
 	var last_tick := int(battle.get("last_tick_unix", now))
 	var elapsed := now - last_tick
 	if elapsed > 0 and bool(battle.get("active", false)):
-		_simulate_time(float(elapsed))
+		_simulate_time(float(elapsed) * _current_speed_multiplier())
 		battle["last_tick_unix"] = now
 		_commit(true)
 
@@ -87,10 +90,7 @@ func start_battle(dungeon_id: String, party_ids: Array[String], auto_repeat: boo
 	if not DUNGEONS.has(dungeon_id):
 		push_warning("[Battle] Unknown dungeon: %s" % dungeon_id)
 		return false
-	if party_ids.size() > 3:
-		push_warning("[Battle] Party size exceeds 3. Extra members will be ignored.")
-	var capped_party_ids := party_ids.slice(0, 3)
-	var party := _build_party_state(capped_party_ids)
+	var party := _build_party_state(party_ids)
 	if party.is_empty():
 		push_warning("[Battle] No valid party members.")
 		return false
@@ -98,6 +98,7 @@ func start_battle(dungeon_id: String, party_ids: Array[String], auto_repeat: boo
 	battle = {
 		"active": true,
 		"auto_repeat": auto_repeat,
+		"speed_multiplier": DEFAULT_SPEED_MULTIPLIER,
 		"dungeon_id": dungeon_id,
 		"party": party,
 		"enemy": enemy,
@@ -130,6 +131,8 @@ func _ensure_defaults() -> void:
 		battle["active"] = false
 	if not battle.has("auto_repeat"):
 		battle["auto_repeat"] = true
+	if not battle.has("speed_multiplier"):
+		battle["speed_multiplier"] = DEFAULT_SPEED_MULTIPLIER
 	if not battle.has("dungeon_id"):
 		battle["dungeon_id"] = ""
 	if not battle.has("party") or typeof(battle["party"]) != TYPE_DICTIONARY:
@@ -199,6 +202,19 @@ func _build_enemy_state(dungeon: Dictionary) -> Dictionary:
 		"defence": float(dungeon.get("defence", 0.0))
 	}
 
+func set_battle_speed(multiplier: float) -> void:
+	if battle.is_empty():
+		return
+	var clamped := clampf(multiplier, MIN_SPEED_MULTIPLIER, MAX_SPEED_MULTIPLIER)
+	battle["speed_multiplier"] = clamped
+	_commit(true)
+	battle_updated.emit()
+
+func get_battle_speed() -> float:
+	if battle.is_empty():
+		return DEFAULT_SPEED_MULTIPLIER
+	return float(battle.get("speed_multiplier", DEFAULT_SPEED_MULTIPLIER))
+
 func _simulate_time(seconds: float) -> void:
 	if battle.is_empty() or not bool(battle.get("active", false)):
 		return
@@ -243,6 +259,11 @@ func _simulate_time(seconds: float) -> void:
 	battle["party"] = party
 	battle["enemy"] = enemy
 	battle_updated.emit()
+
+func _current_speed_multiplier() -> float:
+	if battle.is_empty():
+		return DEFAULT_SPEED_MULTIPLIER
+	return clampf(float(battle.get("speed_multiplier", DEFAULT_SPEED_MULTIPLIER)), MIN_SPEED_MULTIPLIER, MAX_SPEED_MULTIPLIER)
 
 func _party_dps(party: Dictionary, enemy_defence: float) -> float:
 	var members = party.get("members", [])

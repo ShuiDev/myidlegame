@@ -56,6 +56,7 @@ static func new_save_data() -> Dictionary:
 		"battle": {
 			"active": false,
 			"auto_repeat": true,
+			"speed_multiplier": 0.6,
 			"dungeon_id": "",
 			"party": {},
 			"enemy": {},
