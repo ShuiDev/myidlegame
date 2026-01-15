@@ -1,6 +1,7 @@
 extends Control
 
 @onready var back_button: Button = get_node_or_null("UI/BackButton") as Button
+@onready var currency_label: Label = get_node_or_null("UI/CurrencyLabel") as Label
 @onready var inventory_list: ItemList = get_node_or_null("UI/InventoryColumn/Inv") as ItemList
 @onready var equipment_list: ItemList = get_node_or_null("UI/EquipmentColumn/Equip") as ItemList
 @onready var skills_list: ItemList = get_node_or_null("UI/SkillsColumn/Skills") as ItemList
@@ -14,12 +15,16 @@ func _ready() -> void:
 		return
 	back_button.pressed.connect(_go_back)
 	creature_selector.item_selected.connect(_on_creature_selected)
+	if get_tree().root.has_node("Battle"):
+		Battle.battle_updated.connect(_refresh)
 	_refresh()
 
 func _ensure_nodes() -> bool:
 	var missing: Array[String] = []
 	if back_button == null:
 		missing.append("UI/BackButton")
+	if currency_label == null:
+		missing.append("UI/CurrencyLabel")
 	if inventory_list == null:
 		missing.append("UI/InventoryColumn/Inv")
 	if equipment_list == null:
@@ -37,10 +42,19 @@ func _go_back() -> void:
 	Router.goto_hub()
 
 func _refresh() -> void:
+	_currency_refresh()
 	_inventory_refresh()
 	_creature_selector_refresh()
 	_equipment_refresh()
 	_skills_refresh()
+
+func _currency_refresh() -> void:
+	if currency_label == null:
+		return
+	var amount := 0
+	if not State.data.is_empty():
+		amount = int(State.data.get("currency", 0))
+	currency_label.text = "Currency: %d" % amount
 
 func _inventory_refresh() -> void:
 	inventory_list.clear()

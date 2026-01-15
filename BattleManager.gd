@@ -31,7 +31,13 @@ const DUNGEONS: Dictionary = {
 		"max_hp": 45.0,
 		"attack": 5.0,
 		"attack_interval": 2.4,
-		"defence": 1.0
+		"defence": 1.0,
+		"currency_min": 2,
+		"currency_max": 6,
+		"drop_table": [
+			{"item_id": "slime_gel", "name": "Slime Gel", "min": 1, "max": 2, "chance": 0.6},
+			{"item_id": "sticky_residue", "name": "Sticky Residue", "min": 1, "max": 1, "chance": 0.25}
+		]
 	},
 	"wolf_den": {
 		"name": "Wolf Den",
@@ -41,7 +47,13 @@ const DUNGEONS: Dictionary = {
 		"max_hp": 85.0,
 		"attack": 9.0,
 		"attack_interval": 2.0,
-		"defence": 3.0
+		"defence": 3.0,
+		"currency_min": 5,
+		"currency_max": 12,
+		"drop_table": [
+			{"item_id": "wolf_pelt", "name": "Wolf Pelt", "min": 1, "max": 1, "chance": 0.5},
+			{"item_id": "sharp_fang", "name": "Sharp Fang", "min": 1, "max": 2, "chance": 0.3}
+		]
 	},
 	"ember_ruins": {
 		"name": "Ember Ruins",
@@ -51,7 +63,13 @@ const DUNGEONS: Dictionary = {
 		"max_hp": 140.0,
 		"attack": 14.0,
 		"attack_interval": 2.3,
-		"defence": 5.0
+		"defence": 5.0,
+		"currency_min": 10,
+		"currency_max": 20,
+		"drop_table": [
+			{"item_id": "ember_shard", "name": "Ember Shard", "min": 1, "max": 3, "chance": 0.6},
+			{"item_id": "golem_core", "name": "Golem Core", "min": 1, "max": 1, "chance": 0.15}
+		]
 	}
 }
 
@@ -246,8 +264,10 @@ func _simulate_time(seconds: float) -> void:
 		remaining -= step
 		if float(enemy.get("hp", 0.0)) <= 0.0:
 			battle["wins"] = int(battle.get("wins", 0)) + 1
+			var dungeon_id := str(battle.get("dungeon_id", ""))
+			_award_drops(dungeon_id)
+			battle_updated.emit()
 			if bool(battle.get("auto_repeat", true)):
-				var dungeon_id := str(battle.get("dungeon_id", ""))
 				if DUNGEONS.has(dungeon_id):
 					enemy = _build_enemy_state(DUNGEONS[dungeon_id])
 				else:
@@ -266,6 +286,49 @@ func _simulate_time(seconds: float) -> void:
 	battle["party"] = party
 	battle["enemy"] = enemy
 	battle_updated.emit()
+
+func _award_drops(dungeon_id: String) -> void:
+	if dungeon_id == "" or not DUNGEONS.has(dungeon_id):
+		return
+	if State.data.is_empty():
+		return
+	var dungeon: Dictionary = DUNGEONS[dungeon_id]
+	var currency_min := int(dungeon.get("currency_min", 0))
+	var currency_max := int(dungeon.get("currency_max", 0))
+	if currency_max < currency_min:
+		var temp := currency_min
+		currency_min = currency_max
+		currency_max = temp
+	var currency_awarded := 0
+	if currency_max > 0:
+		currency_awarded = randi_range(currency_min, currency_max)
+	if currency_awarded > 0:
+		State.data["currency"] = int(State.data.get("currency", 0)) + currency_awarded
+	var drop_table = dungeon.get("drop_table", [])
+	var awarded_item := false
+	if typeof(drop_table) == TYPE_ARRAY:
+		for drop in drop_table:
+			if typeof(drop) != TYPE_DICTIONARY:
+				continue
+			var chance := float(drop.get("chance", 0.0))
+			if chance <= 0.0:
+				continue
+			if randf() <= chance:
+				var min_amount := int(drop.get("min", 1))
+				var max_amount := int(drop.get("max", 1))
+				if max_amount < min_amount:
+					var temp_amount := min_amount
+					min_amount = max_amount
+					max_amount = temp_amount
+				var amount := randi_range(min_amount, max_amount)
+				if amount <= 0:
+					continue
+				var item_id := str(drop.get("item_id", ""))
+				var item_name := str(drop.get("name", item_id))
+				Inventory.add_item(item_id, item_name, amount)
+				awarded_item = true
+	if currency_awarded > 0 and not awarded_item:
+		State.write_now()
 
 func _current_speed_multiplier() -> float:
 	if battle.is_empty():
