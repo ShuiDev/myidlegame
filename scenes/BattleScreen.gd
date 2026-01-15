@@ -97,11 +97,15 @@ func _refresh_status() -> void:
 		party_status_label.text = "Party HP: -"
 		record_status_label.text = "Wins/Losses: -"
 		return
-	var enemy := Battle.battle.get("enemy", {})
-	var enemy_name := str(enemy.get("name", "Enemy"))
-	var enemy_hp := float(enemy.get("hp", 0.0))
-	var enemy_max := float(enemy.get("max_hp", 0.0))
-	enemy_status_label.text = "%s HP: %.0f/%.0f" % [enemy_name, enemy_hp, enemy_max]
+	var enemy_summary := _summarize_enemies(Battle.battle.get("enemies", []))
+	var enemy_name := str(enemy_summary.get("name", "Enemy"))
+	var enemy_hp := float(enemy_summary.get("hp", 0.0))
+	var enemy_max := float(enemy_summary.get("max_hp", 0.0))
+	var enemy_count := int(enemy_summary.get("count", 0))
+	if enemy_count > 1:
+		enemy_status_label.text = "%s (x%d) HP: %.0f/%.0f" % [enemy_name, enemy_count, enemy_hp, enemy_max]
+	else:
+		enemy_status_label.text = "%s HP: %.0f/%.0f" % [enemy_name, enemy_hp, enemy_max]
 
 	var party := Battle.battle.get("party", {})
 	var party_hp := float(party.get("hp", 0.0))
@@ -111,3 +115,23 @@ func _refresh_status() -> void:
 	var wins := int(Battle.battle.get("wins", 0))
 	var losses := int(Battle.battle.get("losses", 0))
 	record_status_label.text = "Wins/Losses: %d/%d" % [wins, losses]
+
+func _summarize_enemies(enemies: Array) -> Dictionary:
+	var total_hp: float = 0.0
+	var total_max: float = 0.0
+	var count := 0
+	var name := "Enemy"
+	for enemy in enemies:
+		if typeof(enemy) != TYPE_DICTIONARY:
+			continue
+		if count == 0:
+			name = str(enemy.get("name", "Enemy"))
+		count += 1
+		total_hp += float(enemy.get("hp", 0.0))
+		total_max += float(enemy.get("max_hp", 0.0))
+	return {
+		"name": name,
+		"hp": total_hp,
+		"max_hp": total_max,
+		"count": count
+	}
