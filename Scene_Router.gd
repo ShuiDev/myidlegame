@@ -10,6 +10,7 @@ const RANCH_SCENE_PATH: String = "res://scenes/RanchScreen.tscn"
 const SMITH_SCENE_PATH: String = "res://scenes/SmithScreen.tscn"
 const BUILD_SCENE_PATH: String = "res://scenes/BuildScreen.tscn"
 const BATTLE_SCENE_PATH: String = "res://scenes/BattleScreen.tscn"
+const PLAYER_SCENE_PATH: String = "res://scenes/PlayerScreen.tscn"
 
 func goto_title() -> void:
 	_change_to(TITLE_SCENE_PATH)
@@ -28,6 +29,9 @@ func goto_build() -> void:
 
 func goto_battle() -> void:
 	_change_to(BATTLE_SCENE_PATH)
+
+func goto_player() -> void:
+	_change_to(PLAYER_SCENE_PATH)
 
 func _change_to(path: String) -> void:
 	if path == "" or not ResourceLoader.exists(path):
