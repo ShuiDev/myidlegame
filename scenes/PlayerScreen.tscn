@@ -26,6 +26,10 @@ size_flags_vertical = 3
 layout_mode = 2
 text = "Back"
 
+[node name="CurrencyLabel" type="Label" parent="UI"]
+layout_mode = 2
+text = "Currency: 0"
+
 [node name="Columns" type="HBoxContainer" parent="UI"]
 layout_mode = 2
 size_flags_vertical = 3

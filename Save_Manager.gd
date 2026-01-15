@@ -53,6 +53,7 @@ static func new_save_data() -> Dictionary:
 		"player": {
 			"hub_spawn_id": "default"
 		},
+		"currency": 0,
 		"battle": {
 			"active": false,
 			"auto_repeat": true,
