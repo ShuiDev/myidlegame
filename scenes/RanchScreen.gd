@@ -1,17 +1,19 @@
 extends Control
 
-@onready var back_button: Button = $BackButton
-@onready var add_button: Button = $AddCreatureButton
-@onready var dungeon_option: OptionButton = $DungeonOption
-@onready var list: ItemList = $CreatureList
-@onready var start_button: Button = $StartBattleButton
-@onready var feedback_label: Label = $FeedbackLabel
+@onready var back_button: Button = get_node_or_null("BackButton") as Button
+@onready var add_button: Button = get_node_or_null("AddCreatureButton") as Button
+@onready var dungeon_option: OptionButton = get_node_or_null("DungeonOption") as OptionButton
+@onready var list: ItemList = get_node_or_null("CreatureList") as ItemList
+@onready var start_button: Button = get_node_or_null("StartBattleButton") as Button
+@onready var feedback_label: Label = get_node_or_null("FeedbackLabel") as Label
 
 const MAX_PARTY_SIZE := 3
 
 var t: Texture2D
 
 func _ready() -> void:
+	if not _ensure_nodes():
+		return
 	back_button.pressed.connect(_go_back)
 	add_button.pressed.connect(_add_creature)
 	dungeon_option.item_selected.connect(_on_dungeon_selected)
@@ -21,6 +23,25 @@ func _ready() -> void:
 	_populate_dungeons()
 	_refresh()
 	_update_start_state()
+
+func _ensure_nodes() -> bool:
+	var missing: Array[String] = []
+	if back_button == null:
+		missing.append("BackButton")
+	if add_button == null:
+		missing.append("AddCreatureButton")
+	if dungeon_option == null:
+		missing.append("DungeonOption")
+	if list == null:
+		missing.append("CreatureList")
+	if start_button == null:
+		missing.append("StartBattleButton")
+	if feedback_label == null:
+		missing.append("FeedbackLabel")
+	if missing.is_empty():
+		return true
+	push_warning("RanchScreen missing nodes: %s" % ", ".join(missing))
+	return false
 
 func _go_back() -> void:
 	Router.goto_hub()

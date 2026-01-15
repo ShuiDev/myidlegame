@@ -1,18 +1,37 @@
 extends Control
 
-@onready var back_button: Button = $UI/BackButton
-@onready var inventory_list: ItemList = $UI/InventoryColumn/InventoryList
-@onready var equipment_list: ItemList = $UI/EquipmentColumn/EquipmentList
-@onready var skills_list: ItemList = $UI/SkillsColumn/SkillsList
-@onready var creature_selector: OptionButton = $UI/EquipmentColumn/CreatureSelectorRow/CreatureSelector
+@onready var back_button: Button = get_node_or_null("UI/BackButton") as Button
+@onready var inventory_list: ItemList = get_node_or_null("UI/InventoryColumn/Inv") as ItemList
+@onready var equipment_list: ItemList = get_node_or_null("UI/EquipmentColumn/Equip") as ItemList
+@onready var skills_list: ItemList = get_node_or_null("UI/SkillsColumn/Skills") as ItemList
+@onready var creature_selector: OptionButton = get_node_or_null("UI/EquipmentColumn/CreatureSelectorRow/CreatureSelector") as OptionButton
 
 var creature_ids: Array[String] = []
 var selected_creature_id: String = ""
 
 func _ready() -> void:
+	if not _ensure_nodes():
+		return
 	back_button.pressed.connect(_go_back)
 	creature_selector.item_selected.connect(_on_creature_selected)
 	_refresh()
+
+func _ensure_nodes() -> bool:
+	var missing: Array[String] = []
+	if back_button == null:
+		missing.append("UI/BackButton")
+	if inventory_list == null:
+		missing.append("UI/InventoryColumn/Inv")
+	if equipment_list == null:
+		missing.append("UI/EquipmentColumn/Equip")
+	if skills_list == null:
+		missing.append("UI/SkillsColumn/Skills")
+	if creature_selector == null:
+		missing.append("UI/EquipmentColumn/CreatureSelectorRow/CreatureSelector")
+	if missing.is_empty():
+		return true
+	push_warning("PlayerScreen missing nodes: %s" % ", ".join(missing))
+	return false
 
 func _go_back() -> void:
 	Router.goto_hub()

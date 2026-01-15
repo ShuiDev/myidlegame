@@ -5,9 +5,11 @@ class_name TutorialOverlay
 
 signal tutorial_finished
 
-@onready var dialogue_box: HBoxContainer = $CanvasLayer/DialogueBox
-@onready var next_button: Button = $CanvasLayer/DialogueBox/Panel2/HBoxContainer/Next
-@onready var skip_button: Button = $CanvasLayer/DialogueBox/Panel2/HBoxContainer/Skip
+@onready var canvas_layer: CanvasLayer = get_node_or_null("CanvasLayer") as CanvasLayer
+@onready var dialogue_box: HBoxContainer = get_node_or_null("CanvasLayer/DialogueBox") as HBoxContainer
+@onready var dialogue_label: RichTextLabel = get_node_or_null("CanvasLayer/DialogueBox/Panel/RichTextLabel") as RichTextLabel
+@onready var next_button: Button = get_node_or_null("CanvasLayer/DialogueBox/Panel2/HBoxContainer/Next") as Button
+@onready var skip_button: Button = get_node_or_null("CanvasLayer/DialogueBox/Panel2/HBoxContainer/Skip") as Button
 
 var _steps: Array[String] = []
 var _step_i: int = 0
@@ -15,8 +17,27 @@ var _chapters: Dictionary = {}
 var _chapters_i: int = 0
 
 func _ready() -> void:
+	if not _ensure_nodes():
+		return
 	next_button.pressed.connect(_on_next)
 	skip_button.pressed.connect(_on_skip)
+
+func _ensure_nodes() -> bool:
+	var missing: Array[String] = []
+	if canvas_layer == null:
+		missing.append("CanvasLayer")
+	if dialogue_box == null:
+		missing.append("CanvasLayer/DialogueBox")
+	if dialogue_label == null:
+		missing.append("CanvasLayer/DialogueBox/Panel/RichTextLabel")
+	if next_button == null:
+		missing.append("CanvasLayer/DialogueBox/Panel2/HBoxContainer/Next")
+	if skip_button == null:
+		missing.append("CanvasLayer/DialogueBox/Panel2/HBoxContainer/Skip")
+	if missing.is_empty():
+		return true
+	push_warning("TutorialOverlay missing nodes: %s" % ", ".join(missing))
+	return false
 
 func start_tutorial(chapters: Dictionary) -> void:
 	_chapters = chapters
@@ -52,9 +73,8 @@ func _show_step() -> void:
 	# It must provide a method named restart_from_label_text() OR you can just set text and rely on _ready.
 	# We'll set label.text and call restart_from_label_text if it exists.
 
-	var rtl := $CanvasLayer/DialogueBox/Panel/RichTextLabel
-	if rtl != null and rtl is RichTextLabel:
-		(rtl as RichTextLabel).text = _steps[_step_i]
+	if dialogue_label != null:
+		dialogue_label.text = _steps[_step_i]
 
 	if dialogue_box.has_method("restart_from_label_text"):
 		dialogue_box.call("restart_from_label_text")
@@ -73,5 +93,6 @@ func _on_skip() -> void:
 
 func _finish() -> void:
 	print('tut done')
-	$CanvasLayer.visible = false
+	if canvas_layer != null:
+		canvas_layer.visible = false
 	tutorial_finished.emit()

@@ -1,18 +1,20 @@
 extends Control
 
-@onready var dungeon_option: OptionButton = $Layout/DungeonOption
-@onready var creature_option_one: OptionButton = $Layout/PartyOptions/CreatureOption1
-@onready var creature_option_two: OptionButton = $Layout/PartyOptions/CreatureOption2
-@onready var creature_option_three: OptionButton = $Layout/PartyOptions/CreatureOption3
-@onready var start_button: Button = $Layout/ActionButtons/StartButton
-@onready var stop_button: Button = $Layout/ActionButtons/StopButton
-@onready var enemy_status_label: Label = $Layout/EnemyStatusLabel
-@onready var party_status_label: Label = $Layout/PartyStatusLabel
-@onready var record_status_label: Label = $Layout/RecordStatusLabel
+@onready var dungeon_option: OptionButton = get_node_or_null("Layout/DungeonOption") as OptionButton
+@onready var creature_option_one: OptionButton = get_node_or_null("Layout/PartyOptions/CreatureOption1") as OptionButton
+@onready var creature_option_two: OptionButton = get_node_or_null("Layout/PartyOptions/CreatureOption2") as OptionButton
+@onready var creature_option_three: OptionButton = get_node_or_null("Layout/PartyOptions/CreatureOption3") as OptionButton
+@onready var start_button: Button = get_node_or_null("Layout/ActionButtons/StartButton") as Button
+@onready var stop_button: Button = get_node_or_null("Layout/ActionButtons/StopButton") as Button
+@onready var enemy_status_label: Label = get_node_or_null("Layout/EnemyStatusLabel") as Label
+@onready var party_status_label: Label = get_node_or_null("Layout/PartyStatusLabel") as Label
+@onready var record_status_label: Label = get_node_or_null("Layout/RecordStatusLabel") as Label
 
 var _creature_options: Array[OptionButton] = []
 
 func _ready() -> void:
+	if not _ensure_nodes():
+		return
 	_creature_options = [creature_option_one, creature_option_two, creature_option_three]
 	_populate_dungeons()
 	_populate_creatures()
@@ -20,6 +22,31 @@ func _ready() -> void:
 	stop_button.pressed.connect(_on_stop_pressed)
 	Battle.battle_updated.connect(_on_battle_updated)
 	_refresh_status()
+
+func _ensure_nodes() -> bool:
+	var missing: Array[String] = []
+	if dungeon_option == null:
+		missing.append("Layout/DungeonOption")
+	if creature_option_one == null:
+		missing.append("Layout/PartyOptions/CreatureOption1")
+	if creature_option_two == null:
+		missing.append("Layout/PartyOptions/CreatureOption2")
+	if creature_option_three == null:
+		missing.append("Layout/PartyOptions/CreatureOption3")
+	if start_button == null:
+		missing.append("Layout/ActionButtons/StartButton")
+	if stop_button == null:
+		missing.append("Layout/ActionButtons/StopButton")
+	if enemy_status_label == null:
+		missing.append("Layout/EnemyStatusLabel")
+	if party_status_label == null:
+		missing.append("Layout/PartyStatusLabel")
+	if record_status_label == null:
+		missing.append("Layout/RecordStatusLabel")
+	if missing.is_empty():
+		return true
+	push_warning("BattleScreen (legacy) missing nodes: %s" % ", ".join(missing))
+	return false
 
 func _populate_dungeons() -> void:
 	dungeon_option.clear()
