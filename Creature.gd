@@ -19,12 +19,18 @@ var growth: Dictionary = {}
 # Simple inventory/meters you may want later
 var hunger: float = 0.0
 var happiness: float = 0.0
+var equipment: Dictionary = {}
 
 func _init(new_id: String = "", new_name: String = "Creature") -> void:
 	id = new_id
 	name = new_name
 	stats = Reg.default_stats()
 	growth = Reg.default_growth_rates()
+	equipment = {
+		"weapon": "",
+		"armor": "",
+		"accessory": ""
+	}
 
 func to_dict() -> Dictionary:
 	return {
@@ -35,7 +41,8 @@ func to_dict() -> Dictionary:
 		"stats": stats,
 		"growth": growth,
 		"hunger": hunger,
-		"happiness": happiness
+		"happiness": happiness,
+		"equipment": equipment
 	}
 
 static func from_dict(d: Dictionary) -> Creature:
@@ -60,4 +67,14 @@ static func from_dict(d: Dictionary) -> Creature:
 
 	c.hunger = float(d.get("hunger", 0.0))
 	c.happiness = float(d.get("happiness", 0.0))
+	var base_equipment := {
+		"weapon": "",
+		"armor": "",
+		"accessory": ""
+	}
+	var loaded_equipment = d.get("equipment", {})
+	if typeof(loaded_equipment) == TYPE_DICTIONARY:
+		for k in loaded_equipment.keys():
+			base_equipment[k] = loaded_equipment[k]
+	c.equipment = base_equipment
 	return c
