@@ -30,21 +30,21 @@ func _go_back() -> void:
 
 func _populate_dungeons() -> void:
 	dungeon_option.clear()
-	var dungeon_ids := Battle.DUNGEONS.keys()
+	var dungeon_ids=Battle.DUNGEONS.keys()
 	dungeon_ids.sort()
 	for dungeon_id in dungeon_ids:
-		var dungeon := Battle.DUNGEONS[dungeon_id]
-		var name := str(dungeon.get("name", dungeon_id))
+		var dungeon=Battle.DUNGEONS[dungeon_id]
+		var name=str(dungeon.get("name", dungeon_id))
 		dungeon_option.add_item(name)
 		dungeon_option.set_item_metadata(dungeon_option.item_count - 1, dungeon_id)
 
 func _populate_party_options() -> void:
-	var options := [party_one_option, party_two_option, party_three_option]
+	var options=[party_one_option, party_two_option, party_three_option]
 	for option in options:
 		option.clear()
 		option.add_item("None")
 		option.set_item_metadata(0, "")
-	var creatures := Ranch.get_creature_objects()
+	var creatures=Ranch.get_creature_objects()
 	for creature in creatures:
 		for option in options:
 			option.add_item(creature.name)
@@ -52,28 +52,28 @@ func _populate_party_options() -> void:
 
 func _selected_party_ids() -> Array[String]:
 	var ids: Array[String] = []
-	var options := [party_one_option, party_two_option, party_three_option]
+	var options=[party_one_option, party_two_option, party_three_option]
 	for option in options:
-		var idx := option.get_selected_id()
+		var idx=option.get_selected_id()
 		var meta = option.get_item_metadata(idx)
 		if meta != null and str(meta) != "":
-			var id := str(meta)
+			var id=str(meta)
 			if not ids.has(id):
 				ids.append(id)
 	return ids
 
 func _selected_dungeon_id() -> String:
-	var idx := dungeon_option.get_selected_id()
+	var idx=dungeon_option.get_selected_id()
 	var meta = dungeon_option.get_item_metadata(idx)
 	if meta == null:
 		return ""
 	return str(meta)
 
 func _start_battle() -> void:
-	var dungeon_id := _selected_dungeon_id()
+	var dungeon_id=_selected_dungeon_id()
 	if dungeon_id == "":
 		return
-	var party_ids := _selected_party_ids()
+	var party_ids=_selected_party_ids()
 	if party_ids.is_empty():
 		return
 	Battle.start_battle(dungeon_id, party_ids, true)
@@ -86,7 +86,7 @@ func _on_speed_changed(value: float) -> void:
 	_sync_speed_label(value)
 
 func _sync_speed() -> void:
-	var speed := Battle.get_battle_speed()
+	var speed=Battle.get_battle_speed()
 	speed_slider.value = speed
 	_sync_speed_label(speed)
 
@@ -94,26 +94,26 @@ func _sync_speed_label(speed: float) -> void:
 	speed_label.text = "x%.1f" % speed
 
 func _refresh_status() -> void:
-	var battle := Battle.battle
+	var battle=Battle.battle
 	if battle.is_empty():
 		enemy_label.text = "Enemy: --"
 		party_label.text = "Party HP: --"
 		record_label.text = "Record: 0W / 0L"
 		enemy_texture.texture = null
 		return
-	var enemy := battle.get("enemy", {})
-	var party := battle.get("party", {})
-	var enemy_hp := float(enemy.get("hp", 0.0))
-	var enemy_max := float(enemy.get("max_hp", 0.0))
-	var party_hp := float(party.get("hp", 0.0))
-	var party_max := float(party.get("max_hp", 0.0))
-	var enemy_name := str(enemy.get("name", "Enemy"))
-	var wins := int(battle.get("wins", 0))
-	var losses := int(battle.get("losses", 0))
+	var enemy=battle.get("enemy", {})
+	var party=battle.get("party", {})
+	var enemy_hp=float(enemy.get("hp", 0.0))
+	var enemy_max=float(enemy.get("max_hp", 0.0))
+	var party_hp=float(party.get("hp", 0.0))
+	var party_max=float(party.get("max_hp", 0.0))
+	var enemy_name=str(enemy.get("name", "Enemy"))
+	var wins=int(battle.get("wins", 0))
+	var losses=int(battle.get("losses", 0))
 	enemy_label.text = "%s: %.0f / %.0f" % [enemy_name, enemy_hp, enemy_max]
 	party_label.text = "Party HP: %.0f / %.0f" % [party_hp, party_max]
 	record_label.text = "Record: %dW / %dL" % [wins, losses]
-	var texture_path := str(enemy.get("texture_path", ""))
+	var texture_path=str(enemy.get("texture_path", ""))
 	if texture_path != "" and ResourceLoader.exists(texture_path):
 		enemy_texture.texture = load(texture_path)
 	else:

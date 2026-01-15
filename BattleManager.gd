@@ -68,9 +68,9 @@ func _process(_delta: float) -> void:
 		return
 	if State.data.is_empty():
 		return
-	var now := Time.get_unix_time_from_system()
-	var last_tick := int(battle.get("last_tick_unix", now))
-	var elapsed := now - last_tick
+	var now=Time.get_unix_time_from_system()
+	var last_tick=int(battle.get("last_tick_unix", now))
+	var elapsed=now - last_tick
 	if elapsed <= 0:
 		return
 	_simulate_time(float(elapsed) * _current_speed_multiplier())
@@ -81,9 +81,9 @@ func _on_save_loaded() -> void:
 	_load_from_state()
 	if battle.is_empty():
 		return
-	var now := Time.get_unix_time_from_system()
-	var last_tick := int(battle.get("last_tick_unix", now))
-	var elapsed := now - last_tick
+	var now=Time.get_unix_time_from_system()
+	var last_tick=int(battle.get("last_tick_unix", now))
+	var elapsed=now - last_tick
 	if elapsed > 0 and bool(battle.get("active", false)):
 		_simulate_time(float(elapsed) * _current_speed_multiplier())
 		battle["last_tick_unix"] = now
@@ -93,11 +93,11 @@ func start_battle(dungeon_id: String, party_ids: Array[String], auto_repeat: boo
 	if not DUNGEONS.has(dungeon_id):
 		push_warning("[Battle] Unknown dungeon: %s" % dungeon_id)
 		return false
-	var party := _build_party_state(party_ids)
+	var party=_build_party_state(party_ids)
 	if party.is_empty():
 		push_warning("[Battle] No valid party members.")
 		return false
-	var enemy := _build_enemy_state(DUNGEONS[dungeon_id])
+	var enemy=_build_enemy_state(DUNGEONS[dungeon_id])
 	battle = {
 		"active": true,
 		"auto_repeat": auto_repeat,
@@ -154,7 +154,7 @@ func _build_party_state(party_ids: Array[String]) -> Dictionary:
 	var total_hp: float = 0.0
 	var total_defence: float = 0.0
 	var ids: Array[String] = []
-	var roster := Ranch.get_creature_objects()
+	var roster=Ranch.get_creature_objects()
 	var roster_by_id: Dictionary = {}
 	for creature in roster:
 		roster_by_id[creature.id] = creature
@@ -162,17 +162,17 @@ func _build_party_state(party_ids: Array[String]) -> Dictionary:
 		if not roster_by_id.has(id):
 			continue
 		var creature: Creature = roster_by_id[id]
-		var stats := creature.stats
-		var vitality := float(stats.get("vitality", 0))
-		var strength := float(stats.get("strength", 0))
-		var dexterity := float(stats.get("dexterity", 0))
-		var magic := float(stats.get("magic", 0))
-		var defence := float(stats.get("defence", 0))
-		var magic_defence := float(stats.get("magic_defence", 0))
-		var max_hp := BASE_HP + vitality * HP_PER_VITALITY
-		var attack := BASE_ATTACK + strength * STRENGTH_WEIGHT + dexterity * DEXTERITY_WEIGHT + magic * MAGIC_WEIGHT
-		var attack_interval := max(MIN_ATTACK_INTERVAL, 2.6 - dexterity * 0.02)
-		var total_member_defence := defence * DEFENCE_WEIGHT + magic_defence * MAGIC_DEFENCE_WEIGHT
+		var stats=creature.stats
+		var vitality=float(stats.get("vitality", 0))
+		var strength=float(stats.get("strength", 0))
+		var dexterity=float(stats.get("dexterity", 0))
+		var magic=float(stats.get("magic", 0))
+		var defence=float(stats.get("defence", 0))
+		var magic_defence=float(stats.get("magic_defence", 0))
+		var max_hp=BASE_HP + vitality * HP_PER_VITALITY
+		var attack=BASE_ATTACK + strength * STRENGTH_WEIGHT + dexterity * DEXTERITY_WEIGHT + magic * MAGIC_WEIGHT
+		var attack_interval=max(MIN_ATTACK_INTERVAL, 2.6 - dexterity * 0.02)
+		var total_member_defence=defence * DEFENCE_WEIGHT + magic_defence * MAGIC_DEFENCE_WEIGHT
 		members.append({
 			"id": creature.id,
 			"name": creature.name,
@@ -185,7 +185,7 @@ func _build_party_state(party_ids: Array[String]) -> Dictionary:
 		total_defence += total_member_defence
 	if members.is_empty():
 		return {}
-	var avg_defence := total_defence / float(members.size())
+	var avg_defence=total_defence / float(members.size())
 	return {
 		"creature_ids": ids,
 		"members": members,
@@ -209,7 +209,7 @@ func _build_enemy_state(dungeon: Dictionary) -> Dictionary:
 func set_battle_speed(multiplier: float) -> void:
 	if battle.is_empty():
 		return
-	var clamped := clampf(multiplier, MIN_SPEED_MULTIPLIER, MAX_SPEED_MULTIPLIER)
+	var clamped=clampf(multiplier, MIN_SPEED_MULTIPLIER, MAX_SPEED_MULTIPLIER)
 	battle["speed_multiplier"] = clamped
 	_commit(true)
 	battle_updated.emit()
@@ -222,23 +222,23 @@ func get_battle_speed() -> float:
 func _simulate_time(seconds: float) -> void:
 	if battle.is_empty() or not bool(battle.get("active", false)):
 		return
-	var remaining := seconds
+	var remaining=seconds
 	var party: Dictionary = battle.get("party", {})
 	var enemy: Dictionary = battle.get("enemy", {})
 	if party.is_empty() or enemy.is_empty():
 		return
 	while remaining > 0.0 and bool(battle.get("active", false)):
-		var party_dps := _party_dps(party, float(enemy.get("defence", 0.0)))
-		var enemy_dps := _enemy_dps(enemy, float(party.get("defence", 0.0)))
+		var party_dps=_party_dps(party, float(enemy.get("defence", 0.0)))
+		var enemy_dps=_enemy_dps(enemy, float(party.get("defence", 0.0)))
 		if party_dps <= 0.0 and enemy_dps <= 0.0:
 			break
-		var time_to_enemy := INF
-		var time_to_party := INF
+		var time_to_enemy=INF
+		var time_to_party=INF
 		if party_dps > 0.0:
 			time_to_enemy = float(enemy.get("hp", 0.0)) / party_dps
 		if enemy_dps > 0.0:
 			time_to_party = float(party.get("hp", 0.0)) / enemy_dps
-		var step := min(remaining, time_to_enemy, time_to_party)
+		var step=min(remaining, time_to_enemy, time_to_party)
 		if step == INF or step <= 0.0:
 			break
 		enemy["hp"] = float(enemy.get("hp", 0.0)) - party_dps * step
@@ -247,7 +247,7 @@ func _simulate_time(seconds: float) -> void:
 		if float(enemy.get("hp", 0.0)) <= 0.0:
 			battle["wins"] = int(battle.get("wins", 0)) + 1
 			if bool(battle.get("auto_repeat", true)):
-				var dungeon_id := str(battle.get("dungeon_id", ""))
+				var dungeon_id=str(battle.get("dungeon_id", ""))
 				if DUNGEONS.has(dungeon_id):
 					enemy = _build_enemy_state(DUNGEONS[dungeon_id])
 				else:
@@ -280,20 +280,20 @@ func _party_dps(party: Dictionary, enemy_defence: float) -> float:
 	for member in members:
 		if typeof(member) != TYPE_DICTIONARY:
 			continue
-		var attack := float(member.get("attack", 0.0))
-		var interval := float(member.get("attack_interval", 1.0))
+		var attack=float(member.get("attack", 0.0))
+		var interval=float(member.get("attack_interval", 1.0))
 		if interval <= 0.0:
 			continue
-		var hit := max(1.0, attack - enemy_defence * DEFENCE_REDUCTION)
+		var hit=max(1.0, attack - enemy_defence * DEFENCE_REDUCTION)
 		total += hit / interval
 	return total
 
 func _enemy_dps(enemy: Dictionary, party_defence: float) -> float:
-	var attack := float(enemy.get("attack", 0.0))
-	var interval := float(enemy.get("attack_interval", 1.0))
+	var attack=float(enemy.get("attack", 0.0))
+	var interval=float(enemy.get("attack_interval", 1.0))
 	if interval <= 0.0:
 		return 0.0
-	var hit := max(1.0, attack - party_defence * DEFENCE_REDUCTION)
+	var hit=max(1.0, attack - party_defence * DEFENCE_REDUCTION)
 	return hit / interval
 
 func _commit(force: bool = false) -> void:

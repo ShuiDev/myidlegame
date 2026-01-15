@@ -16,7 +16,7 @@ func start_new(file_name: String) -> void:
 
 func load_existing(file_name: String) -> bool:
 	save_file = Save.normalize_file_name(file_name)
-	var loaded := SaveManager.load_save(save_file)
+	var loaded=SaveManager.load_save(save_file)
 	if loaded.is_empty():
 		return false
 	data = loaded
@@ -28,7 +28,7 @@ func load_existing(file_name: String) -> bool:
 func write_now() -> bool:
 	if save_file == "":
 		return false
-	var ok := SaveManager.write_save(save_file, data)
+	var ok=SaveManager.write_save(save_file, data)
 	if ok:
 		save_written.emit()
 	return ok

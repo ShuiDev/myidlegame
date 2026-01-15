@@ -18,7 +18,7 @@ func _ready() -> void:
 	tutorial.visible = false
 	tutorial.tutorial_finished.connect(_on_tutorial_finished)
 
-	var gs := _require_game_state()
+	var gs=_require_game_state()
 	if gs == null:
 		return
 
@@ -40,13 +40,13 @@ func _start_tutorial() -> void:
 	tutorial.start_tutorial(chapters)
 
 func _on_tutorial_finished() -> void:
-	var gs := _require_game_state()
+	var gs=_require_game_state()
 	if gs == null:
 		return
 	gs.mark_tutorial_complete()
 
 func _require_game_state() -> State:
-	var gs := get_tree().root.get_node_or_null("State")
+	var gs=get_tree().root.get_node_or_null("State")
 	if gs == null:
 		push_warning("Missing autoload: GameState")
 		return null

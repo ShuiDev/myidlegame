@@ -40,6 +40,6 @@ func _change_to(path: String) -> void:
 	call_deferred("_do_change", path)
 
 func _do_change(path: String) -> void:
-	var err := get_tree().change_scene_to_file(path)
+	var err=get_tree().change_scene_to_file(path)
 	if err != OK:
 		push_error("[SceneRouter] change_scene_to_file failed (%d) for %s" % [err, path])
