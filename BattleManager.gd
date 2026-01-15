@@ -251,6 +251,9 @@ func _simulate_time(seconds: float) -> void:
 					break
 				party["hp"] = min(float(party.get("max_hp", 0.0)), float(party.get("hp", 0.0)) + float(party.get("max_hp", 0.0)) * VICTORY_HEAL_PERCENT)
 				battle["enemy"] = enemy
+				if float(party.get("hp", 0.0)) <= 0.0:
+					party["hp"] = 1.0
+				continue
 			else:
 				battle["active"] = false
 		if float(party.get("hp", 0.0)) <= 0.0:
