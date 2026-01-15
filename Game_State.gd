@@ -53,3 +53,40 @@ func _ensure_defaults() -> void:
 		data["ranch"] = {}
 	if not data["ranch"].has("creatures") or typeof(data["ranch"]["creatures"]) != TYPE_ARRAY:
 		data["ranch"]["creatures"] = []
+
+	if not data.has("battle") or typeof(data["battle"]) != TYPE_DICTIONARY:
+		data["battle"] = {}
+	var battle: Dictionary = data["battle"]
+	if not battle.has("active"):
+		battle["active"] = false
+	if not battle.has("auto_repeat"):
+		battle["auto_repeat"] = true
+	if not battle.has("speed_multiplier"):
+		battle["speed_multiplier"] = 0.6
+	if not battle.has("dungeon_id"):
+		battle["dungeon_id"] = ""
+	if not battle.has("party") or typeof(battle["party"]) != TYPE_DICTIONARY:
+		battle["party"] = {}
+	if not battle.has("enemy") or typeof(battle["enemy"]) != TYPE_DICTIONARY:
+		battle["enemy"] = {}
+	if not battle.has("wins"):
+		battle["wins"] = 0
+	if not battle.has("losses"):
+		battle["losses"] = 0
+	if not battle.has("last_tick_unix"):
+		battle["last_tick_unix"] = Time.get_unix_time_from_system()
+
+	if not data.has("inventory") or typeof(data["inventory"]) != TYPE_ARRAY:
+		data["inventory"] = []
+	if not data.has("equipment") or typeof(data["equipment"]) != TYPE_DICTIONARY:
+		data["equipment"] = {}
+	if not data["equipment"].has("weapon"):
+		data["equipment"]["weapon"] = ""
+	if not data["equipment"].has("armor"):
+		data["equipment"]["armor"] = ""
+	if not data["equipment"].has("accessory"):
+		data["equipment"]["accessory"] = ""
+	if not data.has("skills") or typeof(data["skills"]) != TYPE_DICTIONARY:
+		data["skills"] = {}
+	if not data["skills"].has("combat"):
+		data["skills"]["combat"] = {"level": 1, "xp": 0}

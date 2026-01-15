@@ -6,11 +6,13 @@ extends Control
 @onready var ranch_button: Button = $UI/RanchButton
 @onready var smith_button: Button = $UI/SmithButton
 @onready var build_button: Button = $UI/BuildButton
+@onready var battle_button: Button = $UI/BattleButton
 
 func _ready() -> void:
 	ranch_button.pressed.connect(_go_ranch)
 	smith_button.pressed.connect(_go_smith)
 	build_button.pressed.connect(_go_build)
+	battle_button.pressed.connect(_go_battle)
 	tutorial.visible = false
 	tutorial.tutorial_finished.connect(_on_tutorial_finished)
 
@@ -57,3 +59,6 @@ func _go_smith() -> void:
 
 func _go_build() -> void:
 	Router.goto_build()
+
+func _go_battle() -> void:
+	Router.goto_battle()
