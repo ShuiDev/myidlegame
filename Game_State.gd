@@ -49,6 +49,9 @@ func _ensure_defaults() -> void:
 	if not data["flags"].has("tutorial_complete"):
 		data["flags"]["tutorial_complete"] = false
 
+	if not data.has("currency"):
+		data["currency"] = 0
+
 	if not data.has("ranch") or typeof(data["ranch"]) != TYPE_DICTIONARY:
 		data["ranch"] = {}
 	if not data["ranch"].has("creatures") or typeof(data["ranch"]["creatures"]) != TYPE_ARRAY:

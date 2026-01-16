@@ -4,16 +4,33 @@ extends Control
 
 @export var default_new_save_name: String = "save_1"
 
-@onready var new_game_button: Button = $VBox/NewGameButton
-@onready var load_game_button: Button = $VBox/LoadGameButton
-@onready var saves_list: ItemList = $VBox/SavesList
-@onready var status_label: Label = $VBox/StatusLabel
+@onready var new_game_button: Button = get_node_or_null("VBox/NewGameButton") as Button
+@onready var load_game_button: Button = get_node_or_null("VBox/LoadGameButton") as Button
+@onready var saves_list: ItemList = get_node_or_null("VBox/SavesList") as ItemList
+@onready var status_label: Label = get_node_or_null("VBox/StatusLabel") as Label
 
 func _ready() -> void:
+	if not _ensure_nodes():
+		return
 	new_game_button.pressed.connect(_on_new_game)
 	load_game_button.pressed.connect(_on_load_game)
 
 	_refresh_saves()
+
+func _ensure_nodes() -> bool:
+	var missing: Array[String] = []
+	if new_game_button == null:
+		missing.append("VBox/NewGameButton")
+	if load_game_button == null:
+		missing.append("VBox/LoadGameButton")
+	if saves_list == null:
+		missing.append("VBox/SavesList")
+	if status_label == null:
+		missing.append("VBox/StatusLabel")
+	if missing.is_empty():
+		return true
+	push_warning("TitleScreen missing nodes: %s" % ", ".join(missing))
+	return false
 
 func _refresh_saves() -> void:
 	saves_list.clear()
