@@ -1,0 +1,68 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8x0pt1yf6b40"]
+
+[ext_resource type="Script" path="res://PlayerScreen.gd" id="1_5w1sk"]
+
+[node name="PlayerScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5w1sk")
+
+[node name="UI" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="UI"]
+layout_mode = 2
+text = "Back"
+
+[node name="Columns" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_horizontal = 3
+
+[node name="InventoryColumn" type="VBoxContainer" parent="UI/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InventoryLabel" type="Label" parent="UI/Columns/InventoryColumn"]
+layout_mode = 2
+text = "Inventory"
+
+[node name="InventoryList" type="ItemList" parent="UI/Columns/InventoryColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EquipmentColumn" type="VBoxContainer" parent="UI/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EquipmentLabel" type="Label" parent="UI/Columns/EquipmentColumn"]
+layout_mode = 2
+text = "Equipment"
+
+[node name="EquipmentList" type="ItemList" parent="UI/Columns/EquipmentColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SkillsColumn" type="VBoxContainer" parent="UI/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkillsLabel" type="Label" parent="UI/Columns/SkillsColumn"]
+layout_mode = 2
+text = "Skills"
+
+[node name="SkillsList" type="ItemList" parent="UI/Columns/SkillsColumn"]
+layout_mode = 2
+size_flags_vertical = 3

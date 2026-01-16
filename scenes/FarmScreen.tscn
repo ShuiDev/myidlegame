@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3 uid="uid://civv4um0v1njs"]
+
+[ext_resource type="Script" path="res://FarmScreen.gd" id="1_7f7np"]
+
+[node name="FarmScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7f7np")
+
+[node name="UI" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="UI"]
+layout_mode = 2
+text = "Back"
+
+[node name="Content" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_horizontal = 3
+
+[node name="PilesGrid" type="GridContainer" parent="UI/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 3
+
+[node name="Details" type="VBoxContainer" parent="UI/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SelectedLabel" type="Label" parent="UI/Content/Details"]
+layout_mode = 2
+text = "Select a pile"
+
+[node name="SeedRow" type="HBoxContainer" parent="UI/Content/Details"]
+layout_mode = 2
+
+[node name="SeedLabel" type="Label" parent="UI/Content/Details/SeedRow"]
+layout_mode = 2
+text = "Seed"
+
+[node name="SeedOption" type="OptionButton" parent="UI/Content/Details/SeedRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ActionsRow" type="HBoxContainer" parent="UI/Content/Details"]
+layout_mode = 2
+
+[node name="DigButton" type="Button" parent="UI/Content/Details/ActionsRow"]
+layout_mode = 2
+text = "Dig"
+
+[node name="PlantButton" type="Button" parent="UI/Content/Details/ActionsRow"]
+layout_mode = 2
+text = "Plant"
+
+[node name="WaterButton" type="Button" parent="UI/Content/Details/ActionsRow"]
+layout_mode = 2
+text = "Water"
+
+[node name="FertilizeButton" type="Button" parent="UI/Content/Details/ActionsRow"]
+layout_mode = 2
+text = "Fertilize"
+
+[node name="HarvestButton" type="Button" parent="UI/Content/Details/ActionsRow"]
+layout_mode = 2
+text = "Harvest"
+
+[node name="UpgradeButton" type="Button" parent="UI/Content/Details/ActionsRow"]
+layout_mode = 2
+text = "Upgrade"
+
+[node name="StatusLabel" type="Label" parent="UI/Content/Details"]
+layout_mode = 2
+text = ""

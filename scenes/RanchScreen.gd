@@ -20,10 +20,10 @@ func _add_creature() -> void:
 
 func _refresh() -> void:
 	list.clear()
-	var cs := Ranch.get_creature_objects()
+	var cs=Ranch.get_creature_objects()
 	for c in cs:
 		# show a few core stats; everything else is still in c.stats dictionary
-		var s := "STR %s  DEX %s  MAG %s" % [
+		var s="STR %s  DEX %s  MAG %s" % [
 			str(c.stats.get("strength", 0)),
 			str(c.stats.get("dexterity", 0)),
 			str(c.stats.get("magic", 0))
