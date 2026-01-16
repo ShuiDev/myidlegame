@@ -28,7 +28,7 @@ const DUNGEONS: Dictionary = {
 		"enemy_id": "slime",
 		"enemy_name": "Gel Slime",
 		"texture_path": "res://sprites/shui.png",
-  Z"max_hp": 45.0,
+		"max_hp": 45.0,
 		"attack": 5.0,
 		"attack_interval": 2.4,
 		"defence": 1.0

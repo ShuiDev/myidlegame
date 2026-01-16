@@ -1,16 +1,16 @@
 extends Control
 
 @onready var back_button = get_node_or_null("UI/BackButton")
-@onready var piles_grid = get_node_or_null("UI/PilesGrid")
-@onready var selected_label = get_node_or_null("UI/Details/SelectedLabel")
-@onready var seed_option = get_node_or_null("UI/Details/SeedRow/SeedOption")
-@onready var dig_button = get_node_or_null("UI/Details/ActionsRow/DigButton")
-@onready var plant_button = get_node_or_null("UI/Details/ActionsRow/PlantButton")
-@onready var water_button = get_node_or_null("UI/Details/ActionsRow/WaterButton")
-@onready var fertilize_button = get_node_or_null("UI/Details/ActionsRow/FertilizeButton")
-@onready var harvest_button = get_node_or_null("UI/Details/ActionsRow/HarvestButton")
-@onready var upgrade_button = get_node_or_null("UI/Details/ActionsRow/UpgradeButton")
-@onready var status_label = get_node_or_null("UI/Details/StatusLabel")
+@onready var piles_grid = get_node_or_null("UI/Content/PilesGrid")
+@onready var selected_label = get_node_or_null("UI/Content/Details/SelectedLabel")
+@onready var seed_option = get_node_or_null("UI/Content/Details/SeedRow/SeedOption")
+@onready var dig_button = get_node_or_null("UI/Content/Details/ActionsRow/DigButton")
+@onready var plant_button = get_node_or_null("UI/Content/Details/ActionsRow/PlantButton")
+@onready var water_button = get_node_or_null("UI/Content/Details/ActionsRow/WaterButton")
+@onready var fertilize_button = get_node_or_null("UI/Content/Details/ActionsRow/FertilizeButton")
+@onready var harvest_button = get_node_or_null("UI/Content/Details/ActionsRow/HarvestButton")
+@onready var upgrade_button = get_node_or_null("UI/Content/Details/ActionsRow/UpgradeButton")
+@onready var status_label = get_node_or_null("UI/Content/Details/StatusLabel")
 
 var selected_index = -1
 
