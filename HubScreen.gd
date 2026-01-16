@@ -11,6 +11,8 @@ extends Control
 @onready var farm_button: Button = $UI/FarmButton
 
 func _ready() -> void:
+	if not _ensure_nodes():
+		return
 	ranch_button.pressed.connect(_go_ranch)
 	smith_button.pressed.connect(_go_smith)
 	build_button.pressed.connect(_go_build)
@@ -26,6 +28,25 @@ func _ready() -> void:
 
 	if not gs.tutorial_complete():
 		_start_tutorial()
+
+func _ensure_nodes() -> bool:
+	var missing: Array[String] = []
+	if tutorial == null:
+		missing.append("TutorialOverlay")
+	if ranch_button == null:
+		missing.append("UI/RanchButton")
+	if smith_button == null:
+		missing.append("UI/SmithButton")
+	if build_button == null:
+		missing.append("UI/BuildButton")
+	if battle_button == null:
+		missing.append("UI/BattleButton")
+	if player_button == null:
+		missing.append("UI/PlayerButton")
+	if missing.is_empty():
+		return true
+	push_warning("HubScreen missing nodes: %s" % ", ".join(missing))
+	return false
 
 func _start_tutorial() -> void:
 	# You said you'll handle specifics; here are placeholder steps.
