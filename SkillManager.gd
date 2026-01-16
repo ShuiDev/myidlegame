@@ -41,7 +41,7 @@ func add_xp(skill_id: String, amount: int) -> void:
 		skills[skill_id] = {"level": 1, "xp": 0}
 	var entry: Dictionary = skills[skill_id]
 	entry["xp"] = int(entry.get("xp", 0)) + amount
-	var level := int(entry.get("level", 1))
+	var level=int(entry.get("level", 1))
 	while entry["xp"] >= _xp_to_next_level(level):
 		entry["xp"] = int(entry["xp"]) - _xp_to_next_level(level)
 		level += 1

@@ -73,8 +73,9 @@ func _show_step() -> void:
 	# It must provide a method named restart_from_label_text() OR you can just set text and rely on _ready.
 	# We'll set label.text and call restart_from_label_text if it exists.
 
-	if dialogue_label != null:
-		dialogue_label.text = _steps[_step_i]
+	var rtl=$CanvasLayer/DialogueBox/Panel/RichTextLabel
+	if rtl != null and rtl is RichTextLabel:
+		(rtl as RichTextLabel).text = _steps[_step_i]
 
 	if dialogue_box.has_method("restart_from_label_text"):
 		dialogue_box.call("restart_from_label_text")

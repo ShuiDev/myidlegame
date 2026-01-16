@@ -35,5 +35,9 @@ text = "Battle"
 layout_mode = 2
 text = "Player"
 
+[node name="FarmButton" type="Button" parent="UI"]
+layout_mode = 2
+text = "Farm"
+
 [node name="TutorialOverlay" parent="." instance=ExtResource("1_uqau5")]
 layout_mode = 1

@@ -16,7 +16,7 @@ func start_new(file_name: String) -> void:
 
 func load_existing(file_name: String) -> bool:
 	save_file = Save.normalize_file_name(file_name)
-	var loaded := SaveManager.load_save(save_file)
+	var loaded=SaveManager.load_save(save_file)
 	if loaded.is_empty():
 		return false
 	data = loaded
@@ -28,7 +28,7 @@ func load_existing(file_name: String) -> bool:
 func write_now() -> bool:
 	if save_file == "":
 		return false
-	var ok := SaveManager.write_save(save_file, data)
+	var ok=SaveManager.write_save(save_file, data)
 	if ok:
 		save_written.emit()
 	return ok
@@ -70,12 +70,8 @@ func _ensure_defaults() -> void:
 		battle["dungeon_id"] = ""
 	if not battle.has("party") or typeof(battle["party"]) != TYPE_DICTIONARY:
 		battle["party"] = {}
-	if not battle.has("enemies") or typeof(battle["enemies"]) != TYPE_ARRAY:
-		battle["enemies"] = []
-	if battle.has("enemy") and typeof(battle["enemy"]) == TYPE_DICTIONARY:
-		if battle["enemies"].is_empty() and not battle["enemy"].is_empty():
-			battle["enemies"] = [battle["enemy"].duplicate(true)]
-		battle.erase("enemy")
+	if not battle.has("enemy") or typeof(battle["enemy"]) != TYPE_DICTIONARY:
+		battle["enemy"] = {}
 	if not battle.has("wins"):
 		battle["wins"] = 0
 	if not battle.has("losses"):
@@ -97,3 +93,10 @@ func _ensure_defaults() -> void:
 		data["skills"] = {}
 	if not data["skills"].has("combat"):
 		data["skills"]["combat"] = {"level": 1, "xp": 0}
+
+	if not data.has("farm") or typeof(data["farm"]) != TYPE_DICTIONARY:
+		data["farm"] = {}
+	if not data["farm"].has("piles") or typeof(data["farm"]["piles"]) != TYPE_ARRAY:
+		data["farm"]["piles"] = []
+	if not data["farm"].has("last_tick_unix"):
+		data["farm"]["last_tick_unix"] = Time.get_unix_time_from_system()

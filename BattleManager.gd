@@ -28,54 +28,30 @@ const DUNGEONS: Dictionary = {
 		"enemy_id": "slime",
 		"enemy_name": "Gel Slime",
 		"texture_path": "res://sprites/shui.png",
-		"min_enemies": 2,
-		"max_enemies": 4,
-		"max_hp": 45.0,
+  Z"max_hp": 45.0,
 		"attack": 5.0,
 		"attack_interval": 2.4,
-		"defence": 1.0,
-		"currency_min": 2,
-		"currency_max": 6,
-		"drop_table": [
-			{"item_id": "slime_gel", "name": "Slime Gel", "min": 1, "max": 2, "chance": 0.6},
-			{"item_id": "sticky_residue", "name": "Sticky Residue", "min": 1, "max": 1, "chance": 0.25}
-		]
+		"defence": 1.0
 	},
 	"wolf_den": {
 		"name": "Wolf Den",
 		"enemy_id": "wolf",
 		"enemy_name": "Ravenous Wolf",
 		"texture_path": "res://sprites/wolf_smith.png",
-		"min_enemies": 1,
-		"max_enemies": 2,
 		"max_hp": 85.0,
 		"attack": 9.0,
 		"attack_interval": 2.0,
-		"defence": 3.0,
-		"currency_min": 5,
-		"currency_max": 12,
-		"drop_table": [
-			{"item_id": "wolf_pelt", "name": "Wolf Pelt", "min": 1, "max": 1, "chance": 0.5},
-			{"item_id": "sharp_fang", "name": "Sharp Fang", "min": 1, "max": 2, "chance": 0.3}
-		]
+		"defence": 3.0
 	},
 	"ember_ruins": {
 		"name": "Ember Ruins",
 		"enemy_id": "ember_golem",
 		"enemy_name": "Ember Golem",
 		"texture_path": "res://sprites/Maneater.png",
-		"min_enemies": 1,
-		"max_enemies": 1,
 		"max_hp": 140.0,
 		"attack": 14.0,
 		"attack_interval": 2.3,
-		"defence": 5.0,
-		"currency_min": 10,
-		"currency_max": 20,
-		"drop_table": [
-			{"item_id": "ember_shard", "name": "Ember Shard", "min": 1, "max": 3, "chance": 0.6},
-			{"item_id": "golem_core", "name": "Golem Core", "min": 1, "max": 1, "chance": 0.15}
-		]
+		"defence": 5.0
 	}
 }
 
@@ -92,9 +68,9 @@ func _process(_delta: float) -> void:
 		return
 	if State.data.is_empty():
 		return
-	var now := Time.get_unix_time_from_system()
-	var last_tick := int(battle.get("last_tick_unix", now))
-	var elapsed := now - last_tick
+	var now=Time.get_unix_time_from_system()
+	var last_tick=int(battle.get("last_tick_unix", now))
+	var elapsed=now - last_tick
 	if elapsed <= 0:
 		return
 	_simulate_time(float(elapsed) * _current_speed_multiplier())
@@ -105,9 +81,9 @@ func _on_save_loaded() -> void:
 	_load_from_state()
 	if battle.is_empty():
 		return
-	var now := Time.get_unix_time_from_system()
-	var last_tick := int(battle.get("last_tick_unix", now))
-	var elapsed := now - last_tick
+	var now=Time.get_unix_time_from_system()
+	var last_tick=int(battle.get("last_tick_unix", now))
+	var elapsed=now - last_tick
 	if elapsed > 0 and bool(battle.get("active", false)):
 		_simulate_time(float(elapsed) * _current_speed_multiplier())
 		battle["last_tick_unix"] = now
@@ -117,18 +93,18 @@ func start_battle(dungeon_id: String, party_ids: Array[String], auto_repeat: boo
 	if not DUNGEONS.has(dungeon_id):
 		push_warning("[Battle] Unknown dungeon: %s" % dungeon_id)
 		return false
-	var party := _build_party_state(party_ids)
+	var party=_build_party_state(party_ids)
 	if party.is_empty():
 		push_warning("[Battle] No valid party members.")
 		return false
-	var enemies := _build_enemy_state(DUNGEONS[dungeon_id])
+	var enemy=_build_enemy_state(DUNGEONS[dungeon_id])
 	battle = {
 		"active": true,
 		"auto_repeat": auto_repeat,
 		"speed_multiplier": DEFAULT_SPEED_MULTIPLIER,
 		"dungeon_id": dungeon_id,
 		"party": party,
-		"enemies": enemies,
+		"enemy": enemy,
 		"wins": 0,
 		"losses": 0,
 		"last_tick_unix": Time.get_unix_time_from_system()
@@ -164,12 +140,8 @@ func _ensure_defaults() -> void:
 		battle["dungeon_id"] = ""
 	if not battle.has("party") or typeof(battle["party"]) != TYPE_DICTIONARY:
 		battle["party"] = {}
-	if not battle.has("enemies") or typeof(battle["enemies"]) != TYPE_ARRAY:
-		battle["enemies"] = []
-	if battle.has("enemy") and typeof(battle["enemy"]) == TYPE_DICTIONARY:
-		if battle["enemies"].is_empty() and not battle["enemy"].is_empty():
-			battle["enemies"] = [battle["enemy"].duplicate(true)]
-		battle.erase("enemy")
+	if not battle.has("enemy") or typeof(battle["enemy"]) != TYPE_DICTIONARY:
+		battle["enemy"] = {}
 	if not battle.has("wins"):
 		battle["wins"] = 0
 	if not battle.has("losses"):
@@ -182,7 +154,7 @@ func _build_party_state(party_ids: Array[String]) -> Dictionary:
 	var total_hp: float = 0.0
 	var total_defence: float = 0.0
 	var ids: Array[String] = []
-	var roster := Ranch.get_creature_objects()
+	var roster=Ranch.get_creature_objects()
 	var roster_by_id: Dictionary = {}
 	for creature in roster:
 		roster_by_id[creature.id] = creature
@@ -190,17 +162,17 @@ func _build_party_state(party_ids: Array[String]) -> Dictionary:
 		if not roster_by_id.has(id):
 			continue
 		var creature: Creature = roster_by_id[id]
-		var stats := creature.stats
-		var vitality := float(stats.get("vitality", 0))
-		var strength := float(stats.get("strength", 0))
-		var dexterity := float(stats.get("dexterity", 0))
-		var magic := float(stats.get("magic", 0))
-		var defence := float(stats.get("defence", 0))
-		var magic_defence := float(stats.get("magic_defence", 0))
-		var max_hp := BASE_HP + vitality * HP_PER_VITALITY
-		var attack := BASE_ATTACK + strength * STRENGTH_WEIGHT + dexterity * DEXTERITY_WEIGHT + magic * MAGIC_WEIGHT
-		var attack_interval := max(MIN_ATTACK_INTERVAL, 2.6 - dexterity * 0.02)
-		var total_member_defence := defence * DEFENCE_WEIGHT + magic_defence * MAGIC_DEFENCE_WEIGHT
+		var stats=creature.stats
+		var vitality=float(stats.get("vitality", 0))
+		var strength=float(stats.get("strength", 0))
+		var dexterity=float(stats.get("dexterity", 0))
+		var magic=float(stats.get("magic", 0))
+		var defence=float(stats.get("defence", 0))
+		var magic_defence=float(stats.get("magic_defence", 0))
+		var max_hp=BASE_HP + vitality * HP_PER_VITALITY
+		var attack=BASE_ATTACK + strength * STRENGTH_WEIGHT + dexterity * DEXTERITY_WEIGHT + magic * MAGIC_WEIGHT
+		var attack_interval=max(MIN_ATTACK_INTERVAL, 2.6 - dexterity * 0.02)
+		var total_member_defence=defence * DEFENCE_WEIGHT + magic_defence * MAGIC_DEFENCE_WEIGHT
 		members.append({
 			"id": creature.id,
 			"name": creature.name,
@@ -213,7 +185,7 @@ func _build_party_state(party_ids: Array[String]) -> Dictionary:
 		total_defence += total_member_defence
 	if members.is_empty():
 		return {}
-	var avg_defence := total_defence / float(members.size())
+	var avg_defence=total_defence / float(members.size())
 	return {
 		"creature_ids": ids,
 		"members": members,
@@ -222,69 +194,22 @@ func _build_party_state(party_ids: Array[String]) -> Dictionary:
 		"defence": avg_defence
 	}
 
-func _build_enemy_state(dungeon: Dictionary) -> Array:
-	var count := _resolve_enemy_count(dungeon)
-	var enemies: Array = []
-	for idx in range(count):
-		enemies.append({
-			"id": dungeon.get("enemy_id", "enemy"),
-			"name": dungeon.get("enemy_name", "Enemy"),
-			"texture_path": dungeon.get("texture_path", ""),
-			"max_hp": float(dungeon.get("max_hp", 10.0)),
-			"hp": float(dungeon.get("max_hp", 10.0)),
-			"attack": float(dungeon.get("attack", 1.0)),
-			"attack_interval": float(dungeon.get("attack_interval", 2.5)),
-			"defence": float(dungeon.get("defence", 0.0)),
-			"index": idx
-		})
-	return enemies
-
-func _resolve_enemy_count(dungeon: Dictionary) -> int:
-	var wave_sizes = dungeon.get("wave_size", [])
-	if typeof(wave_sizes) == TYPE_ARRAY and not wave_sizes.is_empty():
-		var index := randi_range(0, wave_sizes.size() - 1)
-		return max(1, int(wave_sizes[index]))
-	var min_enemies := int(dungeon.get("min_enemies", 1))
-	var max_enemies := int(dungeon.get("max_enemies", min_enemies))
-	if max_enemies < min_enemies:
-		var temp := min_enemies
-		min_enemies = max_enemies
-		max_enemies = temp
-	return max(1, randi_range(min_enemies, max_enemies))
-
-func _enemy_group_stats(enemies: Array) -> Dictionary:
-	var total_hp: float = 0.0
-	var total_max: float = 0.0
-	var total_defence: float = 0.0
-	var count := 0
-	var name := "Enemy"
-	var texture_path := ""
-	for enemy in enemies:
-		if typeof(enemy) != TYPE_DICTIONARY:
-			continue
-		if count == 0:
-			name = str(enemy.get("name", "Enemy"))
-			texture_path = str(enemy.get("texture_path", ""))
-		count += 1
-		total_hp += float(enemy.get("hp", 0.0))
-		total_max += float(enemy.get("max_hp", 0.0))
-		total_defence += float(enemy.get("defence", 0.0))
-	var avg_defence := 0.0
-	if count > 0:
-		avg_defence = total_defence / float(count)
+func _build_enemy_state(dungeon: Dictionary) -> Dictionary:
 	return {
-		"count": count,
-		"hp": total_hp,
-		"max_hp": total_max,
-		"avg_defence": avg_defence,
-		"name": name,
-		"texture_path": texture_path
+		"id": dungeon.get("enemy_id", "enemy"),
+		"name": dungeon.get("enemy_name", "Enemy"),
+		"texture_path": dungeon.get("texture_path", ""),
+		"max_hp": float(dungeon.get("max_hp", 10.0)),
+		"hp": float(dungeon.get("max_hp", 10.0)),
+		"attack": float(dungeon.get("attack", 1.0)),
+		"attack_interval": float(dungeon.get("attack_interval", 2.5)),
+		"defence": float(dungeon.get("defence", 0.0))
 	}
 
 func set_battle_speed(multiplier: float) -> void:
 	if battle.is_empty():
 		return
-	var clamped := clampf(multiplier, MIN_SPEED_MULTIPLIER, MAX_SPEED_MULTIPLIER)
+	var clamped=clampf(multiplier, MIN_SPEED_MULTIPLIER, MAX_SPEED_MULTIPLIER)
 	battle["speed_multiplier"] = clamped
 	_commit(true)
 	battle_updated.emit()
@@ -297,53 +222,39 @@ func get_battle_speed() -> float:
 func _simulate_time(seconds: float) -> void:
 	if battle.is_empty() or not bool(battle.get("active", false)):
 		return
-	var remaining := seconds
+	var remaining=seconds
 	var party: Dictionary = battle.get("party", {})
-	var enemies: Array = battle.get("enemies", [])
-	if party.is_empty() or enemies.is_empty():
+	var enemy: Dictionary = battle.get("enemy", {})
+	if party.is_empty() or enemy.is_empty():
 		return
 	while remaining > 0.0 and bool(battle.get("active", false)):
-		var enemy_stats := _enemy_group_stats(enemies)
-		var enemy_count := int(enemy_stats.get("count", 0))
-		if enemy_count <= 0:
-			break
-		var party_dps := _party_dps(party, float(enemy_stats.get("avg_defence", 0.0)))
-		var enemy_dps := _enemies_dps(enemies, float(party.get("defence", 0.0)))
+		var party_dps=_party_dps(party, float(enemy.get("defence", 0.0)))
+		var enemy_dps=_enemy_dps(enemy, float(party.get("defence", 0.0)))
 		if party_dps <= 0.0 and enemy_dps <= 0.0:
 			break
-		var per_enemy_dps := 0.0
-		if enemy_count > 0:
-			per_enemy_dps = party_dps / float(enemy_count)
-		var time_to_enemy := INF
-		var time_to_party := INF
-		if per_enemy_dps > 0.0:
-			time_to_enemy = _time_to_next_defeat(enemies, per_enemy_dps)
+		var time_to_enemy=INF
+		var time_to_party=INF
+		if party_dps > 0.0:
+			time_to_enemy = float(enemy.get("hp", 0.0)) / party_dps
 		if enemy_dps > 0.0:
 			time_to_party = float(party.get("hp", 0.0)) / enemy_dps
-		var step := min(remaining, time_to_enemy, time_to_party)
+		var step=min(remaining, time_to_enemy, time_to_party)
 		if step == INF or step <= 0.0:
 			break
-		if per_enemy_dps > 0.0:
-			for enemy in enemies:
-				if typeof(enemy) != TYPE_DICTIONARY:
-					continue
-				enemy["hp"] = float(enemy.get("hp", 0.0)) - per_enemy_dps * step
+		enemy["hp"] = float(enemy.get("hp", 0.0)) - party_dps * step
 		party["hp"] = float(party.get("hp", 0.0)) - enemy_dps * step
 		remaining -= step
-		enemies = _prune_defeated(enemies)
-		if enemies.is_empty():
+		if float(enemy.get("hp", 0.0)) <= 0.0:
 			battle["wins"] = int(battle.get("wins", 0)) + 1
-			var dungeon_id := str(battle.get("dungeon_id", ""))
-			_award_drops(dungeon_id)
-			battle_updated.emit()
 			if bool(battle.get("auto_repeat", true)):
+				var dungeon_id=str(battle.get("dungeon_id", ""))
 				if DUNGEONS.has(dungeon_id):
-					enemies = _build_enemy_state(DUNGEONS[dungeon_id])
+					enemy = _build_enemy_state(DUNGEONS[dungeon_id])
 				else:
 					battle["active"] = false
 					break
 				party["hp"] = min(float(party.get("max_hp", 0.0)), float(party.get("hp", 0.0)) + float(party.get("max_hp", 0.0)) * VICTORY_HEAL_PERCENT)
-				battle["enemies"] = enemies
+				battle["enemy"] = enemy
 				if float(party.get("hp", 0.0)) <= 0.0:
 					party["hp"] = 1.0
 				continue
@@ -353,51 +264,8 @@ func _simulate_time(seconds: float) -> void:
 			battle["losses"] = int(battle.get("losses", 0)) + 1
 			battle["active"] = false
 	battle["party"] = party
-	battle["enemies"] = enemies
+	battle["enemy"] = enemy
 	battle_updated.emit()
-
-func _award_drops(dungeon_id: String) -> void:
-	if dungeon_id == "" or not DUNGEONS.has(dungeon_id):
-		return
-	if State.data.is_empty():
-		return
-	var dungeon: Dictionary = DUNGEONS[dungeon_id]
-	var currency_min := int(dungeon.get("currency_min", 0))
-	var currency_max := int(dungeon.get("currency_max", 0))
-	if currency_max < currency_min:
-		var temp := currency_min
-		currency_min = currency_max
-		currency_max = temp
-	var currency_awarded := 0
-	if currency_max > 0:
-		currency_awarded = randi_range(currency_min, currency_max)
-	if currency_awarded > 0:
-		State.data["currency"] = int(State.data.get("currency", 0)) + currency_awarded
-	var drop_table = dungeon.get("drop_table", [])
-	var awarded_item := false
-	if typeof(drop_table) == TYPE_ARRAY:
-		for drop in drop_table:
-			if typeof(drop) != TYPE_DICTIONARY:
-				continue
-			var chance := float(drop.get("chance", 0.0))
-			if chance <= 0.0:
-				continue
-			if randf() <= chance:
-				var min_amount := int(drop.get("min", 1))
-				var max_amount := int(drop.get("max", 1))
-				if max_amount < min_amount:
-					var temp_amount := min_amount
-					min_amount = max_amount
-					max_amount = temp_amount
-				var amount := randi_range(min_amount, max_amount)
-				if amount <= 0:
-					continue
-				var item_id := str(drop.get("item_id", ""))
-				var item_name := str(drop.get("name", item_id))
-				Inventory.add_item(item_id, item_name, amount)
-				awarded_item = true
-	if currency_awarded > 0 and not awarded_item:
-		State.write_now()
 
 func _current_speed_multiplier() -> float:
 	if battle.is_empty():
@@ -412,51 +280,21 @@ func _party_dps(party: Dictionary, enemy_defence: float) -> float:
 	for member in members:
 		if typeof(member) != TYPE_DICTIONARY:
 			continue
-		var attack := float(member.get("attack", 0.0))
-		var interval := float(member.get("attack_interval", 1.0))
+		var attack=float(member.get("attack", 0.0))
+		var interval=float(member.get("attack_interval", 1.0))
 		if interval <= 0.0:
 			continue
-		var hit := max(1.0, attack - enemy_defence * DEFENCE_REDUCTION)
+		var hit=max(1.0, attack - enemy_defence * DEFENCE_REDUCTION)
 		total += hit / interval
 	return total
 
 func _enemy_dps(enemy: Dictionary, party_defence: float) -> float:
-	var attack := float(enemy.get("attack", 0.0))
-	var interval := float(enemy.get("attack_interval", 1.0))
+	var attack=float(enemy.get("attack", 0.0))
+	var interval=float(enemy.get("attack_interval", 1.0))
 	if interval <= 0.0:
 		return 0.0
-	var hit := max(1.0, attack - party_defence * DEFENCE_REDUCTION)
+	var hit=max(1.0, attack - party_defence * DEFENCE_REDUCTION)
 	return hit / interval
-
-func _enemies_dps(enemies: Array, party_defence: float) -> float:
-	var total := 0.0
-	for enemy in enemies:
-		if typeof(enemy) != TYPE_DICTIONARY:
-			continue
-		total += _enemy_dps(enemy, party_defence)
-	return total
-
-func _time_to_next_defeat(enemies: Array, per_enemy_dps: float) -> float:
-	if per_enemy_dps <= 0.0:
-		return INF
-	var shortest := INF
-	for enemy in enemies:
-		if typeof(enemy) != TYPE_DICTIONARY:
-			continue
-		var hp := float(enemy.get("hp", 0.0))
-		if hp <= 0.0:
-			continue
-		shortest = min(shortest, hp / per_enemy_dps)
-	return shortest
-
-func _prune_defeated(enemies: Array) -> Array:
-	var survivors: Array = []
-	for enemy in enemies:
-		if typeof(enemy) != TYPE_DICTIONARY:
-			continue
-		if float(enemy.get("hp", 0.0)) > 0.0:
-			survivors.append(enemy)
-	return survivors
 
 func _commit(force: bool = false) -> void:
 	if State.data.is_empty():

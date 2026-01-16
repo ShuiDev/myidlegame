@@ -26,10 +26,6 @@ size_flags_vertical = 3
 layout_mode = 2
 text = "Back"
 
-[node name="CurrencyLabel" type="Label" parent="UI"]
-layout_mode = 2
-text = "Currency: 0"
-
 [node name="Columns" type="HBoxContainer" parent="UI"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -43,7 +39,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Inventory"
 
-[node name="Inv" type="ItemList" parent="UI/Columns/InventoryColumn"]
+[node name="InventoryList" type="ItemList" parent="UI/Columns/InventoryColumn"]
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -55,18 +51,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Equipment"
 
-[node name="CreatureSelectorRow" type="HBoxContainer" parent="UI/Columns/EquipmentColumn"]
-layout_mode = 2
-
-[node name="CreatureLabel" type="Label" parent="UI/Columns/EquipmentColumn/CreatureSelectorRow"]
-layout_mode = 2
-text = "Creature"
-
-[node name="CreatureSelector" type="OptionButton" parent="UI/Columns/EquipmentColumn/CreatureSelectorRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Equip" type="ItemList" parent="UI/Columns/EquipmentColumn"]
+[node name="EquipmentList" type="ItemList" parent="UI/Columns/EquipmentColumn"]
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -78,6 +63,6 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Skills"
 
-[node name="Skills" type="ItemList" parent="UI/Columns/SkillsColumn"]
+[node name="SkillsList" type="ItemList" parent="UI/Columns/SkillsColumn"]
 layout_mode = 2
 size_flags_vertical = 3

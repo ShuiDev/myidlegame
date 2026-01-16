@@ -42,7 +42,7 @@ func remove_item(item_id: String, amount: int = 1) -> bool:
 	for i in range(items.size()):
 		var entry = items[i]
 		if typeof(entry) == TYPE_DICTIONARY and entry.get("id", "") == item_id:
-			var qty := int(entry.get("qty", 0))
+			var qty=int(entry.get("qty", 0))
 			if qty < amount:
 				return false
 			qty -= amount

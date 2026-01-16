@@ -47,14 +47,14 @@ func _refresh_saves() -> void:
 func _on_new_game() -> void:
 	# If save_1 exists, auto-increment to save_2, save_3, ...
 	print('test')
-	var base := default_new_save_name
-	var idx := 1
+	var base=default_new_save_name
+	var idx=1
 	var n = "%s_%d" % [base, idx]
 	while FileAccess.file_exists(Save.save_path(Save.normalize_file_name(n))):
 		idx += 1
 		name = "%s_%d" % [base, idx]
 
-	var gs := _require_game_state()
+	var gs=_require_game_state()
 	if gs == null:
 		return
 
@@ -62,18 +62,18 @@ func _on_new_game() -> void:
 	_require_router().goto_hub()
 
 func _on_load_game() -> void:
-	var sel := saves_list.get_selected_items()
+	var sel=saves_list.get_selected_items()
 	if sel.size() == 0:
 		status_label.text = "Pick a save first."
 		return
 
-	var file_name := saves_list.get_item_text(sel[0])
+	var file_name=saves_list.get_item_text(sel[0])
 
-	var gs := _require_game_state()
+	var gs=_require_game_state()
 	if gs == null:
 		return
 
-	var ok := gs.load_existing(file_name)
+	var ok=gs.load_existing(file_name)
 	if not ok:
 		status_label.text = "Failed to load save."
 		_refresh_saves()
@@ -82,14 +82,14 @@ func _on_load_game() -> void:
 	_require_router().goto_hub()
 
 func _require_game_state() -> State:
-	var gs := get_tree().root.get_node_or_null("State")
+	var gs=get_tree().root.get_node_or_null("State")
 	if gs == null:
 		status_label.text = "Missing autoload: GameState"
 		return null
 	return gs as State
 
 func _require_router() -> Router:
-	var r := get_tree().root.get_node_or_null("Router")
+	var r=get_tree().root.get_node_or_null("Router")
 	if r == null:
 		status_label.text = "Missing autoload: SceneRouter"
 		return null
