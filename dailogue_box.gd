@@ -14,7 +14,7 @@ extends HBoxContainer
 @export var pitch_max: float = 1.25
 @export var max_polyphony: int = 6
 
-var _rng := RandomNumberGenerator.new()
+var _rng=RandomNumberGenerator.new()
 var _bank: Array[AudioStream] = []
 
 var _full_text: String = ""
@@ -38,7 +38,7 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	for n in _bus_names:
-		var idx := AudioServer.get_bus_index(n)
+		var idx=AudioServer.get_bus_index(n)
 		if idx != -1:
 			AudioServer.remove_bus(idx)
 	_bus_names.clear()
@@ -69,7 +69,7 @@ func _step() -> void:
 		_typing = false
 		return
 
-	var ch := _full_text[_index]
+	var ch=_full_text[_index]
 	_index += 1
 	label.text += ch
 
@@ -109,14 +109,14 @@ func _setup_audio_pool() -> void:
 
 	var lanes = max(1, max_polyphony)
 	for i in range(lanes):
-		var bus_name := "dlg_voice_%s_%d" % [str(get_instance_id()), i]
+		var bus_name="dlg_voice_%s_%d" % [str(get_instance_id()), i]
 		_bus_names.append(bus_name)
 
 		AudioServer.add_bus(AudioServer.bus_count)
-		var bus_idx := AudioServer.bus_count - 1
+		var bus_idx=AudioServer.bus_count - 1
 		AudioServer.set_bus_name(bus_idx, bus_name)
 
-		var fx := AudioEffectPitchShift.new()
+		var fx=AudioEffectPitchShift.new()
 		fx.pitch_scale = 1.0
 		AudioServer.add_bus_effect(bus_idx, fx, 0)
 		
@@ -138,25 +138,25 @@ func _setup_audio_pool() -> void:
 func _load_bank() -> void:
 	_bank.clear()
 
-	var dir := DirAccess.open(voices_folder)
+	var dir=DirAccess.open(voices_folder)
 	if dir == null:
 		push_warning("Dialogue voices folder not found: " + voices_folder)
 		return
 
 	dir.list_dir_begin()
 	while true:
-		var f := dir.get_next()
+		var f=dir.get_next()
 		if f == "":
 			break
 		if dir.current_is_dir():
 			continue
 
-		var low := f.to_lower()
+		var low=f.to_lower()
 		if not (low.ends_with(".ogg") or low.ends_with(".wav") or low.ends_with(".mp3")):
 			continue
 
-		var p := voices_folder.path_join(f)
-		var res := ResourceLoader.load(p)
+		var p=voices_folder.path_join(f)
+		var res=ResourceLoader.load(p)
 		if res != null and res is AudioStream:
 			_bank.append(res)
 

@@ -9,6 +9,9 @@ const HUB_SCENE_PATH: String = "res://scenes/HubScreen.tscn"
 const RANCH_SCENE_PATH: String = "res://scenes/RanchScreen.tscn"
 const SMITH_SCENE_PATH: String = "res://scenes/SmithScreen.tscn"
 const BUILD_SCENE_PATH: String = "res://scenes/BuildScreen.tscn"
+const BATTLE_SCENE_PATH: String = "res://scenes/BattleScreen.tscn"
+const PLAYER_SCENE_PATH: String = "res://scenes/PlayerScreen.tscn"
+const FARM_SCENE_PATH: String = "res://scenes/FarmScreen.tscn"
 
 func goto_title() -> void:
 	_change_to(TITLE_SCENE_PATH)
@@ -25,6 +28,15 @@ func goto_smith() -> void:
 func goto_build() -> void:
 	_change_to(BUILD_SCENE_PATH)
 
+func goto_battle() -> void:
+	_change_to(BATTLE_SCENE_PATH)
+
+func goto_player() -> void:
+	_change_to(PLAYER_SCENE_PATH)
+
+func goto_farm() -> void:
+	_change_to(FARM_SCENE_PATH)
+
 func _change_to(path: String) -> void:
 	if path == "" or not ResourceLoader.exists(path):
 		push_error("[SceneRouter] Scene path missing/invalid: " + path)
@@ -32,6 +44,6 @@ func _change_to(path: String) -> void:
 	call_deferred("_do_change", path)
 
 func _do_change(path: String) -> void:
-	var err := get_tree().change_scene_to_file(path)
+	var err=get_tree().change_scene_to_file(path)
 	if err != OK:
 		push_error("[SceneRouter] change_scene_to_file failed (%d) for %s" % [err, path])
