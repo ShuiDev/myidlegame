@@ -141,75 +141,93 @@ func upgrade_pile(index: int) -> bool:
 	_commit()
 	return true
 
-func plant_seed(index: int, seed_id: String) -> bool:
-	var piles = get_piles()
-	if index < 0 or index >= piles.size():
+func plant_seed_in_container(container_id: String, seed_id: String) -> bool:
+	if container_id.strip_edges() == "":
 		return false
 	if seed_id.strip_edges() == "":
 		return false
-	var pile = piles[index]
-	if pile.get("seed", "") != "":
-		return false
-	if Inventory.get_quantity(seed_id) <= 0:
-		return false
-	if not Inventory.remove_item(seed_id, 1):
-		return false
-	pile["seed"] = seed_id
-	pile["growth"] = 0.0
-	pile["watered"] = false
-	pile["fertilized"] = false
-	piles[index] = pile
-	farm["piles"] = piles
-	_commit()
-	return true
+	var containers = get_containers()
+	for i in range(containers.size()):
+		var container = containers[i]
+		if str(container.get("id", "")) != container_id:
+			continue
+		if not bool(container.get("filled", false)):
+			return false
+		if str(container.get("seed", "")) != "":
+			return false
+		if Inventory.get_quantity(seed_id) <= 0:
+			return false
+		if not Inventory.remove_item(seed_id, 1):
+			return false
+		container["seed"] = seed_id
+		container["growth"] = 0.0
+		container["watered"] = false
+		container["fertilized"] = false
+		containers[i] = container
+		farm["containers"] = containers
+		_commit()
+		return true
+	return false
 
-func water_pile(index: int) -> bool:
-	var piles = get_piles()
-	if index < 0 or index >= piles.size():
+func water_container(container_id: String) -> bool:
+	if container_id.strip_edges() == "":
 		return false
-	var pile = piles[index]
-	if pile.get("seed", "") == "":
-		return false
-	pile["watered"] = true
-	piles[index] = pile
-	farm["piles"] = piles
-	_commit()
-	return true
+	var containers = get_containers()
+	for i in range(containers.size()):
+		var container = containers[i]
+		if str(container.get("id", "")) != container_id:
+			continue
+		if str(container.get("seed", "")) == "":
+			return false
+		container["watered"] = true
+		containers[i] = container
+		farm["containers"] = containers
+		_commit()
+		return true
+	return false
 
-func fertilize_pile(index: int) -> bool:
-	var piles = get_piles()
-	if index < 0 or index >= piles.size():
+func fertilize_container(container_id: String) -> bool:
+	if container_id.strip_edges() == "":
 		return false
-	var pile = piles[index]
-	if pile.get("seed", "") == "":
-		return false
-	pile["fertilized"] = true
-	piles[index] = pile
-	farm["piles"] = piles
-	_commit()
-	return true
+	var containers = get_containers()
+	for i in range(containers.size()):
+		var container = containers[i]
+		if str(container.get("id", "")) != container_id:
+			continue
+		if str(container.get("seed", "")) == "":
+			return false
+		container["fertilized"] = true
+		containers[i] = container
+		farm["containers"] = containers
+		_commit()
+		return true
+	return false
 
-func harvest_pile(index: int) -> Array:
-	var piles = get_piles()
-	if index < 0 or index >= piles.size():
+func harvest_container(container_id: String) -> Array:
+	if container_id.strip_edges() == "":
 		return []
-	var pile = piles[index]
-	var seed_id = str(pile.get("seed", ""))
-	if seed_id == "":
-		return []
-	if float(pile.get("growth", 0.0)) < 100.0:
-		return []
-	var crop_id = _seed_to_crop(seed_id)
-	var crop_name = crop_id.replace("_", " ").capitalize()
-	Inventory.add_item(crop_id, crop_name, 1)
-	pile["seed"] = ""
-	pile["growth"] = 0.0
-	pile["watered"] = false
-	pile["fertilized"] = false
-	piles[index] = pile
-	farm["piles"] = piles
-	_commit()
-	return [{"id": crop_id, "name": crop_name, "qty": 1}]
+	var containers = get_containers()
+	for i in range(containers.size()):
+		var container = containers[i]
+		if str(container.get("id", "")) != container_id:
+			continue
+		var seed_id = str(container.get("seed", ""))
+		if seed_id == "":
+			return []
+		if float(container.get("growth", 0.0)) < 100.0:
+			return []
+		var crop_id = _seed_to_crop(seed_id)
+		var crop_name = crop_id.replace("_", " ").capitalize()
+		Inventory.add_item(crop_id, crop_name, 1)
+		container["seed"] = ""
+		container["growth"] = 0.0
+		container["watered"] = false
+		container["fertilized"] = false
+		containers[i] = container
+		farm["containers"] = containers
+		_commit()
+		return [{"id": crop_id, "name": crop_name, "qty": 1}]
+	return []
 
 func fill_container_from_pile(pile_index: int, container_id: String) -> Dictionary:
 	if container_id.strip_edges() == "":
@@ -299,23 +317,23 @@ func _apply_offline_growth() -> void:
 	_commit()
 
 func _apply_growth(seconds: float) -> void:
-	var piles = get_piles()
-	for i in range(piles.size()):
-		var pile = piles[i]
-		if pile.get("seed", "") == "":
+	var containers = get_containers()
+	for i in range(containers.size()):
+		var container = containers[i]
+		if str(container.get("seed", "")) == "":
 			continue
-		var growth = float(pile.get("growth", 0.0))
+		var growth = float(container.get("growth", 0.0))
 		if growth >= 100.0:
 			continue
 		var multiplier = 1.0
-		if bool(pile.get("watered", false)):
+		if bool(container.get("watered", false)):
 			multiplier *= 1.5
-		if bool(pile.get("fertilized", false)):
+		if bool(container.get("fertilized", false)):
 			multiplier *= 2.0
 		growth += seconds * 0.4 * multiplier
-		pile["growth"] = clampf(growth, 0.0, 100.0)
-		piles[i] = pile
-	farm["piles"] = piles
+		container["growth"] = clampf(growth, 0.0, 100.0)
+		containers[i] = container
+	farm["containers"] = containers
 
 func _generate_drops(pile: Dictionary) -> Array:
 	var drops = []
