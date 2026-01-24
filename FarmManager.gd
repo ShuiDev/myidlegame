@@ -94,6 +94,25 @@ func remove_container(container_id: String) -> Dictionary:
 			return container
 	return {}
 
+func update_container(container_id: String, updates: Dictionary) -> Dictionary:
+	if farm.is_empty():
+		return {}
+	if container_id.strip_edges() == "":
+		return {}
+	if typeof(updates) != TYPE_DICTIONARY:
+		return {}
+	var containers = get_containers()
+	for i in range(containers.size()):
+		var container = containers[i]
+		if str(container.get("id", "")) == container_id:
+			for key in updates.keys():
+				container[key] = updates[key]
+			containers[i] = container
+			farm["containers"] = containers
+			_commit()
+			return container
+	return {}
+
 func dig_pile(index: int) -> Array:
 	var piles = get_piles()
 	if index < 0 or index >= piles.size():
@@ -248,6 +267,7 @@ func _new_container(container_data: Dictionary) -> Dictionary:
 		"id": str(container_data.get("id", "")),
 		"type": str(container_data.get("type", "")),
 		"filled": bool(container_data.get("filled", false)),
+		"filled_id": str(container_data.get("filled_id", "")),
 		"soil_type": str(container_data.get("soil_type", "")),
 		"seed": str(container_data.get("seed", "")),
 		"growth": float(container_data.get("growth", 0.0)),

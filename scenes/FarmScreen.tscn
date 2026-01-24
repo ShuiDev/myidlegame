@@ -85,3 +85,53 @@ text = "Upgrade"
 [node name="StatusLabel" type="Label" parent="UI/Content/Details"]
 layout_mode = 2
 text = ""
+
+[node name="Containers" type="VBoxContainer" parent="UI/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ContainersLabel" type="Label" parent="UI/Content/Containers"]
+layout_mode = 2
+text = "Containers"
+
+[node name="ContainersGrid" type="GridContainer" parent="UI/Content/Containers"]
+layout_mode = 2
+columns = 3
+
+[node name="ContainerSelectedLabel" type="Label" parent="UI/Content/Containers"]
+layout_mode = 2
+text = "Select a container spot."
+
+[node name="CraftRow" type="HBoxContainer" parent="UI/Content/Containers"]
+layout_mode = 2
+
+[node name="CraftLabel" type="Label" parent="UI/Content/Containers/CraftRow"]
+layout_mode = 2
+text = "Craft"
+
+[node name="CraftOption" type="OptionButton" parent="UI/Content/Containers/CraftRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CraftButton" type="Button" parent="UI/Content/Containers/CraftRow"]
+layout_mode = 2
+text = "Make"
+
+[node name="PlaceRow" type="HBoxContainer" parent="UI/Content/Containers"]
+layout_mode = 2
+
+[node name="PlaceLabel" type="Label" parent="UI/Content/Containers/PlaceRow"]
+layout_mode = 2
+text = "Place"
+
+[node name="PlaceOption" type="OptionButton" parent="UI/Content/Containers/PlaceRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlaceButton" type="Button" parent="UI/Content/Containers/PlaceRow"]
+layout_mode = 2
+text = "Place"
+
+[node name="FillButton" type="Button" parent="UI/Content/Containers"]
+layout_mode = 2
+text = "Fill from pile"
