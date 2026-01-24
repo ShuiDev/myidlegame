@@ -65,7 +65,8 @@ func dig_pile(index: int) -> Array:
 	var pile = piles[index]
 	if pile.get("seed", "") != "":
 		return []
-	var drops = _roll_drops(pile)
+	var drops = _generate_drops(pile)
+	_add_drops_to_inventory(drops)
 	piles[index] = pile
 	farm["piles"] = piles
 	_commit()
@@ -155,6 +156,57 @@ func harvest_pile(index: int) -> Array:
 	_commit()
 	return [{"id": crop_id, "name": crop_name, "qty": 1}]
 
+func fill_container_from_pile(pile_index: int, container_id: String) -> Dictionary:
+	if container_id.strip_edges() == "":
+		return {}
+	if not Inventory.is_container(container_id):
+		return {}
+	if Inventory.is_container_filled(container_id):
+		return {}
+	if Inventory.get_quantity(container_id) <= 0:
+		return {}
+	var material_id = ""
+	var material_name = ""
+	var piles = get_piles()
+	if pile_index >= 0 and pile_index < piles.size():
+		var pile = piles[pile_index]
+		if pile.get("seed", "") != "":
+			return {}
+		var drops = _generate_drops(pile)
+		var base_material = _base_material(str(pile.get("type", "dirt")))
+		material_id = str(base_material.get("id", ""))
+		material_name = str(base_material.get("name", material_id))
+		if material_id == "":
+			return {}
+		_add_drops_to_inventory(drops, material_id, 1)
+		piles[pile_index] = pile
+		farm["piles"] = piles
+		_commit()
+	else:
+		var material_candidates = ["dirt", "sand", "gravel"]
+		for candidate in material_candidates:
+			if Inventory.get_quantity(candidate) > 0:
+				material_id = candidate
+				break
+		if material_id == "":
+			return {}
+		if not Inventory.remove_item(material_id, 1):
+			return {}
+		material_name = Inventory.get_item_name(material_id)
+	if not Inventory.remove_item(container_id, 1):
+		return {}
+	var filled_id = Inventory.get_filled_container_id(container_id)
+	if filled_id == "":
+		return {}
+	var filled_name = Inventory.get_item_name(filled_id)
+	Inventory.add_item(filled_id, filled_name, 1)
+	return {
+		"id": filled_id,
+		"name": filled_name,
+		"material": material_id,
+		"material_name": material_name
+	}
+
 func _apply_offline_growth() -> void:
 	if farm.is_empty():
 		return
@@ -186,7 +238,7 @@ func _apply_growth(seconds: float) -> void:
 		piles[i] = pile
 	farm["piles"] = piles
 
-func _roll_drops(pile: Dictionary) -> Array:
+func _generate_drops(pile: Dictionary) -> Array:
 	var drops = []
 	var pile_type = str(pile.get("type", "dirt"))
 	var level = int(pile.get("level", 1))
@@ -205,9 +257,26 @@ func _roll_drops(pile: Dictionary) -> Array:
 	if randf() < 0.15:
 		var seed = _random_seed()
 		drops.append({"id": seed.id, "name": seed.name, "qty": 1})
-	for drop in drops:
-		Inventory.add_item(drop.id, drop.name, drop.qty)
 	return drops
+
+func _add_drops_to_inventory(drops: Array, skip_id: String = "", skip_qty: int = 0) -> void:
+	var remaining_skip = max(skip_qty, 0)
+	for drop in drops:
+		if typeof(drop) != TYPE_DICTIONARY:
+			continue
+		var drop_id = str(drop.get("id", ""))
+		var drop_name = str(drop.get("name", drop_id))
+		var drop_qty = int(drop.get("qty", 0))
+		if drop_qty <= 0:
+			continue
+		if drop_id == skip_id and remaining_skip > 0:
+			var usable_qty = drop_qty - remaining_skip
+			remaining_skip = max(remaining_skip - drop_qty, 0)
+			if usable_qty <= 0:
+				continue
+			Inventory.add_item(drop_id, drop_name, usable_qty)
+		else:
+			Inventory.add_item(drop_id, drop_name, drop_qty)
 
 func _base_material(pile_type: String) -> Dictionary:
 	match pile_type:

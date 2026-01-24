@@ -5,6 +5,38 @@ class_name InventoryManager
 
 var items: Array = []
 
+const ITEM_REGISTRY := {
+	"clay_pot": {
+		"name": "Clay Pot",
+		"type": "container",
+		"filled": false
+	},
+	"clay_pot_filled": {
+		"name": "Clay Pot (Filled)",
+		"type": "container",
+		"filled": true
+	},
+	"wood_planter": {
+		"name": "Wood Planter",
+		"type": "container",
+		"filled": false
+	},
+	"wood_planter_filled": {
+		"name": "Wood Planter (Filled)",
+		"type": "container",
+		"filled": true
+	}
+}
+
+const CONTAINER_FILL_MAP := {
+	"clay_pot": {
+		"filled_id": "clay_pot_filled"
+	},
+	"wood_planter": {
+		"filled_id": "wood_planter_filled"
+	}
+}
+
 func _ready() -> void:
 	if get_tree().root.has_node("State"):
 		State.save_loaded.connect(_on_save_loaded)
@@ -63,3 +95,27 @@ func get_quantity(item_id: String) -> int:
 
 func list_items() -> Array:
 	return items.duplicate()
+
+func get_item_name(item_id: String) -> String:
+	var data = ITEM_REGISTRY.get(item_id, null)
+	if typeof(data) == TYPE_DICTIONARY:
+		return str(data.get("name", item_id))
+	return item_id
+
+func is_container(item_id: String) -> bool:
+	var data = ITEM_REGISTRY.get(item_id, null)
+	if typeof(data) != TYPE_DICTIONARY:
+		return false
+	return str(data.get("type", "")) == "container"
+
+func is_container_filled(item_id: String) -> bool:
+	var data = ITEM_REGISTRY.get(item_id, null)
+	if typeof(data) != TYPE_DICTIONARY:
+		return false
+	return bool(data.get("filled", false))
+
+func get_filled_container_id(container_id: String) -> String:
+	var data = CONTAINER_FILL_MAP.get(container_id, null)
+	if typeof(data) != TYPE_DICTIONARY:
+		return ""
+	return str(data.get("filled_id", ""))
