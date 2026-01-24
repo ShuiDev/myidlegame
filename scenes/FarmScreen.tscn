@@ -31,7 +31,13 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_horizontal = 3
 
-[node name="PilesGrid" type="GridContainer" parent="UI/Content"]
+[node name="PilesScroll" type="ScrollContainer" parent="UI/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="PilesGrid" type="GridContainer" parent="UI/Content/PilesScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 columns = 3
