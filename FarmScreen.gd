@@ -13,6 +13,11 @@ extends Control
 @onready var status_label = get_node_or_null("UI/Content/Details/StatusLabel")
 
 var selected_index = -1
+var pile_textures = {
+	"dirt": preload("res://sprites/farm/pile_dirt.svg"),
+	"sand": preload("res://sprites/farm/pile_sand.svg"),
+	"gravel": preload("res://sprites/farm/pile_gravel.svg")
+}
 
 func _ready() -> void:
 	if back_button == null or piles_grid == null:
@@ -47,10 +52,25 @@ func _refresh_piles() -> void:
 	var piles = Farm.get_piles()
 	for i in range(piles.size()):
 		var pile = piles[i]
-		var button = Button.new()
-		button.text = _pile_label(pile)
+		var pile_container = VBoxContainer.new()
+		pile_container.alignment = BoxContainer.ALIGNMENT_CENTER
+		var button = TextureButton.new()
+		button.texture_normal = _pile_texture(pile)
+		button.texture_hover = button.texture_normal
+		button.texture_pressed = button.texture_normal
+		button.expand = true
+		button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		button.custom_minimum_size = Vector2(72, 72)
+		button.tooltip_text = _pile_label(pile)
 		button.pressed.connect(_on_pile_pressed.bind(i))
-		piles_grid.add_child(button)
+		var label = Label.new()
+		label.text = _pile_label(pile)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		pile_container.add_child(button)
+		pile_container.add_child(label)
+		piles_grid.add_child(pile_container)
 
 func _pile_label(pile: Dictionary) -> String:
 	var pile_type = str(pile.get("type", "dirt")).capitalize()
@@ -60,6 +80,12 @@ func _pile_label(pile: Dictionary) -> String:
 	if seed != "":
 		return "%s Lv %d\nSeeded %.0f%%" % [pile_type, level, growth]
 	return "%s Lv %d\nDig" % [pile_type, level]
+
+func _pile_texture(pile: Dictionary) -> Texture2D:
+	var pile_type = str(pile.get("type", "dirt"))
+	if pile_textures.has(pile_type):
+		return pile_textures[pile_type]
+	return pile_textures["dirt"]
 
 func _refresh_seed_options() -> void:
 	if seed_option == null:
