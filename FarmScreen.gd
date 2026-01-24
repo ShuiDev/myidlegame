@@ -96,10 +96,6 @@ func _refresh_piles() -> void:
 func _pile_label(pile: Dictionary) -> String:
 	var pile_type = str(pile.get("type", "dirt")).capitalize()
 	var level = int(pile.get("level", 1))
-	var seed = str(pile.get("seed", ""))
-	var growth = float(pile.get("growth", 0.0))
-	if seed != "":
-		return "%s Lv %d\nSeeded %.0f%%" % [pile_type, level, growth]
 	return "%s Lv %d\nDig" % [pile_type, level]
 
 func _pile_texture(pile: Dictionary) -> Texture2D:
@@ -133,17 +129,9 @@ func _refresh_details() -> void:
 		selected_label.text = "Select a pile"
 		return
 	var pile = piles[selected_index]
-	var seed = str(pile.get("seed", ""))
-	var growth = float(pile.get("growth", 0.0))
-	var watered = bool(pile.get("watered", false))
-	var fertilized = bool(pile.get("fertilized", false))
-	selected_label.text = "Pile: %s Lv %d\nSeed: %s\nGrowth: %.0f%%\nWatered: %s  Fertilized: %s" % [
+	selected_label.text = "Pile: %s Lv %d\nDig for drops." % [
 		str(pile.get("type", "dirt")).capitalize(),
-		int(pile.get("level", 1)),
-		(seed if seed != "" else "None"),
-		growth,
-		str(watered),
-		str(fertilized)
+		int(pile.get("level", 1))
 	]
 
 func _on_pile_pressed(index: int) -> void:
@@ -171,35 +159,41 @@ func _dig_selected() -> void:
 	_refresh_container_details()
 
 func _plant_selected() -> void:
-	if selected_index < 0:
+	if selected_container_id == "":
+		_set_status("Select a container to plant.")
 		return
 	var seed_id = _selected_seed_id()
-	var ok = Farm.plant_seed(selected_index, seed_id)
-	_refresh_piles()
-	_refresh_details()
+	var ok = Farm.plant_seed_in_container(selected_container_id, seed_id)
+	_refresh_containers()
+	_refresh_container_details()
 	_refresh_seed_options()
 	_set_status("Planted." if ok else "Unable to plant.")
 
 func _water_selected() -> void:
-	if selected_index < 0:
+	if selected_container_id == "":
+		_set_status("Select a container to water.")
 		return
-	var ok = Farm.water_pile(selected_index)
-	_refresh_details()
+	var ok = Farm.water_container(selected_container_id)
+	_refresh_containers()
+	_refresh_container_details()
 	_set_status("Watered." if ok else "Unable to water.")
 
 func _fertilize_selected() -> void:
-	if selected_index < 0:
+	if selected_container_id == "":
+		_set_status("Select a container to fertilize.")
 		return
-	var ok = Farm.fertilize_pile(selected_index)
-	_refresh_details()
+	var ok = Farm.fertilize_container(selected_container_id)
+	_refresh_containers()
+	_refresh_container_details()
 	_set_status("Fertilized." if ok else "Unable to fertilize.")
 
 func _harvest_selected() -> void:
-	if selected_index < 0:
+	if selected_container_id == "":
+		_set_status("Select a container to harvest.")
 		return
-	var drops = Farm.harvest_pile(selected_index)
-	_refresh_piles()
-	_refresh_details()
+	var drops = Farm.harvest_container(selected_container_id)
+	_refresh_containers()
+	_refresh_container_details()
 	_refresh_seed_options()
 	_set_status(_drops_text(drops, "Harvested!"))
 
@@ -288,10 +282,18 @@ func _refresh_container_details() -> void:
 	var filled_id = str(container.get("filled_id", ""))
 	var name = Inventory.get_item_name(filled_id if filled and filled_id != "" else container_type)
 	var soil = str(container.get("soil_type", ""))
-	container_selected_label.text = "Container: %s\nStatus: %s\nSoil: %s\nPos: %d, %d" % [
+	var seed = str(container.get("seed", ""))
+	var growth = float(container.get("growth", 0.0))
+	var watered = bool(container.get("watered", false))
+	var fertilized = bool(container.get("fertilized", false))
+	container_selected_label.text = "Container: %s\nStatus: %s\nSoil: %s\nSeed: %s\nGrowth: %.0f%%\nWatered: %s  Fertilized: %s\nPos: %d, %d" % [
 		name,
 		("Filled" if filled else "Empty"),
 		(soil.capitalize() if soil != "" else "None"),
+		(seed if seed != "" else "None"),
+		growth,
+		str(watered),
+		str(fertilized),
 		selected_container_position.x,
 		selected_container_position.y
 	]
@@ -302,8 +304,12 @@ func _container_label(container: Dictionary) -> String:
 	var filled_id = str(container.get("filled_id", ""))
 	var name = Inventory.get_item_name(filled_id if filled and filled_id != "" else container_type)
 	var soil = str(container.get("soil_type", ""))
+	var seed = str(container.get("seed", ""))
+	var growth = float(container.get("growth", 0.0))
 	if filled:
 		var soil_label = soil.capitalize() if soil != "" else "Soil"
+		if seed != "":
+			return "%s\n%s %.0f%%" % [name, soil_label, growth]
 		return "%s\nFilled %s" % [name, soil_label]
 	return "%s\nEmpty" % name
 
