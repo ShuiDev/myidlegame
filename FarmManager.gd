@@ -25,7 +25,7 @@ func _load_from_state() -> void:
 	_ensure_defaults()
 
 func _ensure_defaults() -> void:
-	if not farm.has("piles") or typeof(farm["piles"]) != TYPE_ARRAY:
+	if not farm.has("piles") or typeof(farm["piles"]) != TYPE_ARRAY or farm["piles"].is_empty():
 		farm["piles"] = _default_piles()
 	if not farm.has("last_tick_unix"):
 		farm["last_tick_unix"] = Time.get_unix_time_from_system()
