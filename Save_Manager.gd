@@ -74,6 +74,7 @@ static func new_save_data() -> Dictionary:
 			"combat": {"level": 1, "xp": 0}
 		},
 		"farm": {
+			"containers": [],
 			"piles": [],
 			"last_tick_unix": Time.get_unix_time_from_system()
 		}

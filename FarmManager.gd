@@ -25,6 +25,8 @@ func _load_from_state() -> void:
 	_ensure_defaults()
 
 func _ensure_defaults() -> void:
+	if not farm.has("containers") or typeof(farm["containers"]) != TYPE_ARRAY:
+		farm["containers"] = []
 	if not farm.has("piles") or typeof(farm["piles"]) != TYPE_ARRAY or farm["piles"].is_empty():
 		farm["piles"] = _default_piles()
 	if not farm.has("last_tick_unix"):
@@ -57,6 +59,40 @@ func get_piles() -> Array:
 	if farm.is_empty():
 		return []
 	return farm.get("piles", [])
+
+func get_containers() -> Array:
+	if farm.is_empty():
+		return []
+	return farm.get("containers", [])
+
+func place_container(container_data: Dictionary) -> Dictionary:
+	if farm.is_empty():
+		return {}
+	var container = _new_container(container_data)
+	if str(container.get("id", "")).strip_edges() == "":
+		return {}
+	if str(container.get("type", "")).strip_edges() == "":
+		return {}
+	var containers = get_containers()
+	containers.append(container)
+	farm["containers"] = containers
+	_commit()
+	return container
+
+func remove_container(container_id: String) -> Dictionary:
+	if farm.is_empty():
+		return {}
+	if container_id.strip_edges() == "":
+		return {}
+	var containers = get_containers()
+	for i in range(containers.size()):
+		var container = containers[i]
+		if str(container.get("id", "")) == container_id:
+			containers.remove_at(i)
+			farm["containers"] = containers
+			_commit()
+			return container
+	return {}
 
 func dig_pile(index: int) -> Array:
 	var piles = get_piles()
@@ -206,6 +242,29 @@ func fill_container_from_pile(pile_index: int, container_id: String) -> Dictiona
 		"material": material_id,
 		"material_name": material_name
 	}
+
+func _new_container(container_data: Dictionary) -> Dictionary:
+	return {
+		"id": str(container_data.get("id", "")),
+		"type": str(container_data.get("type", "")),
+		"filled": bool(container_data.get("filled", false)),
+		"soil_type": str(container_data.get("soil_type", "")),
+		"seed": str(container_data.get("seed", "")),
+		"growth": float(container_data.get("growth", 0.0)),
+		"watered": bool(container_data.get("watered", false)),
+		"fertilized": bool(container_data.get("fertilized", false)),
+		"position": _normalize_position(container_data.get("position", {}))
+	}
+
+func _normalize_position(position: Variant) -> Dictionary:
+	if typeof(position) == TYPE_VECTOR2:
+		return {"x": position.x, "y": position.y}
+	if typeof(position) == TYPE_DICTIONARY:
+		return {
+			"x": float(position.get("x", 0.0)),
+			"y": float(position.get("y", 0.0))
+		}
+	return {"x": 0.0, "y": 0.0}
 
 func _apply_offline_growth() -> void:
 	if farm.is_empty():
